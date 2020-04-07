@@ -2,7 +2,7 @@ baseurl = "/"
 languageCode = "en-us"
 title = "Simon"
 theme = "hyde-hyde"
-googleAnalytics = ""
+googleAnalytics = "UA-143283233-1"
 disqusShortname = "disqus_ZaSIgvoejX"
 ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
