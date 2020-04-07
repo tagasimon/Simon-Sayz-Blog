@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>datacamp-projects on Simon</title>
+    <link>/categories/datacamp-projects/</link>
+    <description>Recent content in datacamp-projects on Simon</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 07 Apr 2020 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="/categories/datacamp-projects/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>The Evolution of Programming Languages</title>
+      <link>/2020/04/07/the-evolution-of-programming-languages/</link>
+      <pubDate>Tue, 07 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/07/the-evolution-of-programming-languages/</guid>
+      <description>How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in?
+One excellent source of data is Stack Overflow, a programming question and answer site with more than 16 million questions on programming topics. By measuring the number of questions about each technology, we can get an approximate sense of how many people are using it.</description>
+    </item>
+    
+  </channel>
+</rss>
