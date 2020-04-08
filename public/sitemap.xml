@@ -4,16 +4,46 @@
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
   </url>
   
   <url>
-    <loc>/categories/datacamp-projects/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
+    <loc>/categories/eli5/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/na/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/04/08/na-na-na/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/nan/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
   </url>
   
   <url>
     <loc>/post/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/categories/datacamp-projects/</loc>
     <lastmod>2020-04-07T23:01:54+03:00</lastmod>
   </url>
   
@@ -24,16 +54,6 @@
   
   <url>
     <loc>/tags/python/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
     <lastmod>2020-04-07T23:01:54+03:00</lastmod>
   </url>
   

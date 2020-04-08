@@ -1,0 +1,71 @@
+---
+title: NA == NA = TRUE? Wrong
+author: ''
+date: '2020-04-08'
+slug: na-na-na
+categories:
+  - eli5
+tags:
+  - NA
+  - Nan
+  - R
+lastmod: '2020-04-08T11:18:33+03:00'
+layout: post
+type: post
+highlight: no
+---
+
+### Why is NA == NA = NA?
+Most Objects in R compared to themselves return **TRUE** but no **NA**.
+It's actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn't should be return TRUE.
+
+Let's Look at some of the Most Common examples that return *TRUE*
+
+```{r}
+10 == 10
+```
+```{r}
+-10 == -10
+```
+```{r}
+FALSE == FALSE
+```
+
+```{r}
+"NA" == "NA"
+```
+This is a string **"NA"** and not the **NA** we are talking about and will return a TRUE just like any other similar string comparison
+
+## So Why
+
+Think about it this way, if i say i have **$NA** in my bank account and you also have **$NA** in your bank account. I can't confidently say we have an equal in our bank accounts because we i don't know how much you got and so do you. 
+
+So a comparison of Our Bank account balances is surely Unknown. Hence **NA**
+```{r}
+
+NA == NA
+
+```
+
+[Read More about NA's in R4DS](https://r4ds.had.co.nz/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -6,10 +6,21 @@
     <description>Recent content in R on Simon</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 07 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 08 Apr 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>NA == NA = TRUE? Wrong</title>
+      <link>/2020/04/08/na-na-na/</link>
+      <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/08/na-na-na/</guid>
+      <description>Why is NA == NA = NA?Most Objects in R compared to themselves return TRUE but no NA.It’s actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn’t should be return TRUE.
+Let’s Look at some of the Most Common examples that return TRUE
+10 == 10## [1] TRUE-10 == -10## [1] TRUEFALSE == FALSE## [1] TRUE&amp;quot;NA&amp;quot; == &amp;quot;NA&amp;quot;## [1] TRUEThis is a string “NA” and not the NA we are talking about and will return a TRUE just like any other similar string comparison</description>
+    </item>
     
     <item>
       <title>The Evolution of Programming Languages</title>

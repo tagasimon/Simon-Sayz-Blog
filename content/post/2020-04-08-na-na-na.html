@@ -1,0 +1,42 @@
+---
+title: NA == NA = TRUE? Wrong
+author: ''
+date: '2020-04-08'
+slug: na-na-na
+categories:
+  - eli5
+tags:
+  - NA
+  - Nan
+  - R
+lastmod: '2020-04-08T11:18:33+03:00'
+layout: post
+type: post
+highlight: no
+---
+
+
+
+<div id="why-is-na-na-na" class="section level3">
+<h3>Why is NA == NA = NA?</h3>
+<p>Most Objects in R compared to themselves return <strong>TRUE</strong> but no <strong>NA</strong>.
+It’s actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn’t should be return TRUE.</p>
+<p>Let’s Look at some of the Most Common examples that return <em>TRUE</em></p>
+<pre class="r"><code>10 == 10</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>-10 == -10</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>FALSE == FALSE</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<pre class="r"><code>&quot;NA&quot; == &quot;NA&quot;</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>This is a string <strong>“NA”</strong> and not the <strong>NA</strong> we are talking about and will return a TRUE just like any other similar string comparison</p>
+</div>
+<div id="so-why" class="section level2">
+<h2>So Why</h2>
+<p>Think about it this way, if i say i have <strong><span class="math inline">\(NA** in my bank account and you also have **\)</span>NA</strong> in your bank account. I can’t confidently say we have an equal in our bank accounts because we i don’t know how much you got and so do you.</p>
+<p>So a comparison of Our Bank account balances is surely Unknown. Hence <strong>NA</strong></p>
+<pre class="r"><code>NA == NA</code></pre>
+<pre><code>## [1] NA</code></pre>
+<p><a href="https://r4ds.had.co.nz/">Read More about NA’s in R4DS</a></p>
+</div>
