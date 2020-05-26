@@ -1,15 +1,35 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Simon</title>
+    <title>Posts on Home</title>
     <link>/post/</link>
-    <description>Recent content in Posts on Simon</description>
+    <description>Recent content in Posts on Home</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 08 Apr 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 26 May 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Exploring the Kaggle Data Science Survey</title>
+      <link>/2020/05/26/exploring-the-kaggle-data-science-survey/</link>
+      <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/05/26/exploring-the-kaggle-data-science-survey/</guid>
+      <description>1. Welcome to the world of data scienceThroughout the world of data science, there are many languages and tools that can be used to complete a given task. While you are often able to use whichever tool you prefer, it is often important for analysts to work with similar platforms so that they can share their code with one another. Learning what professionals in the data science industry use while at work can help you gain a better understanding of things that you may be asked to do in the future.</description>
+    </item>
+    
+    <item>
+      <title>Prophet Mbonye Interview with Serwanja </title>
+      <link>/2020/04/28/prophet-mbonye-interview-with-serwanja/</link>
+      <pubDate>Tue, 28 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/2020/04/28/prophet-mbonye-interview-with-serwanja/</guid>
+      <description>Elvis Mbonye Claims to have prophesied Corona Virus?? But that not the Point of this Blog.
+Am just interested in what happened during the interview, what words were said, were they Positive or Negative. Did the Interview Spark any emotions like joy, anger, sadness, and so forth??That’s what am going to be analysing here.
+Note : This isn’t complete until the all the episodes of the interview are out.</description>
+    </item>
     
     <item>
       <title>NA == NA = TRUE? Wrong</title>
@@ -17,7 +37,7 @@
       <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/2020/04/08/na-na-na/</guid>
-      <description>Why is NA == NA = NA?Most Objects in R compared to themselves return TRUE but no NA.It’s actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn’t should be return TRUE.
+      <description>Why is NA == NA = NA?Most Objects in R compared to themselves return TRUE but no NA.It’s actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn’t be return TRUE.
 Let’s Look at some of the Most Common examples that return TRUE
 10 == 10## [1] TRUE-10 == -10## [1] TRUEFALSE == FALSE## [1] TRUE&amp;quot;NA&amp;quot; == &amp;quot;NA&amp;quot;## [1] TRUEThis is a string “NA” and not the NA we are talking about and will return a TRUE just like any other similar string comparison</description>
     </item>

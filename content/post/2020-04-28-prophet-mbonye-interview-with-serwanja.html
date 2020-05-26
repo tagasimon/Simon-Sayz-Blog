@@ -1,0 +1,55 @@
+---
+title: 'Prophet Mbonye Interview with Serwanja '
+author: ''
+date: '2020-04-28'
+slug: prophet-mbonye-interview-with-serwanja
+categories:
+  - Analysis
+tags:
+  - R
+  - tidytexts
+lastmod: '2020-04-28T14:37:28+03:00'
+layout: post
+type: post
+highlight: no
+---
+
+
+
+<p><strong>Elvis Mbonye Claims to have prophesied Corona Virus?? But that not the Point of this Blog.</strong></p>
+<p>Am just interested in what happened during the interview, what words were said, were they Positive or Negative. Did the Interview Spark any emotions like joy, anger, sadness, and so forth??
+That’s what am going to be analysing here.</p>
+<p>Note : This isn’t complete until the all the episodes of the interview are out.</p>
+<pre class="r"><code>library(tidyverse)
+library(tidytext)
+library(wordcloud)</code></pre>
+<div id="how-did-i-get-the-data" class="section level3">
+<h3>How did i get the data??</h3>
+<p>After a little research online, i realised i could scrape the auto generated subtitles by youtube and download them as a txt file then read it in excel. its not perfect but it works and its better than transcribing the audio which is another option.</p>
+<pre class="r"><code>data &lt;- readr::read_lines(file.choose()) %&gt;% as_tibble()</code></pre>
+</div>
+<div id="unnesting-words-to-a-single-row-each-and-remove-stop-words" class="section level3">
+<h3>unnesting words to a single row each and remove stop words</h3>
+<pre class="r"><code>data(stopwords)
+
+text_data &lt;- data %&gt;% 
+        unnest_tokens(word, value) %&gt;% 
+        anti_join(stop_words)</code></pre>
+</div>
+<div id="what-is-the-most-common-word-during-the-interview" class="section level3">
+<h3>What is the most common word during the interview??</h3>
+<pre class="r"><code>text_data %&gt;% 
+        count(word, sort = TRUE) %&gt;% 
+        head(20) %&gt;% 
+        mutate(word = fct_reorder(word, n)) %&gt;% 
+        ggplot(aes(word, n)) + 
+        geom_col() + 
+        coord_flip() +
+        labs(y=&quot;# of words&quot;)</code></pre>
+<p><img src="/post/2020-04-28-prophet-mbonye-interview-with-serwanja_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>text_data %&gt;%
+  anti_join(stop_words) %&gt;%
+  count(word) %&gt;%
+  with(wordcloud(word, n, max.words = 100))</code></pre>
+<p><img src="/post/2020-04-28-prophet-mbonye-interview-with-serwanja_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+</div>

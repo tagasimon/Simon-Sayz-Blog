@@ -17,7 +17,7 @@
     
     
 
-<title>The Evolution of Programming Languages • Simon</title>
+<title>The Evolution of Programming Languages • Home</title>
 
 
 <meta name="twitter:card" content="summary"/>
@@ -68,7 +68,7 @@ One excellent source of data is Stack Overflow, a programming question and answe
   <div class="container ">
     <div class="sidebar-about">
       <span class="site__title">
-        <a href="/">Simon</a>
+        <a href="/">Home</a>
       </span>
       
       
@@ -82,7 +82,7 @@ One excellent source of data is Stack Overflow, a programming question and answe
     </div>
     <div class="collapsible-menu">
       <input type="checkbox" id="menuToggle">
-      <label for="menuToggle">Simon</label>
+      <label for="menuToggle">Home</label>
       <div class="menu-content">
         <div>
 	<ul class="sidebar-nav">
@@ -91,7 +91,15 @@ One excellent source of data is Stack Overflow, a programming question and answe
 			 
 				<li>
 					<a href="/about/">
-						<span>About</span>
+						<span>About Me</span>
+					</a>
+				</li>
+			 
+		 
+			 
+				<li>
+					<a href="/portfolio/">
+						<span>Portfolio</span>
 					</a>
 				</li>
 			 
@@ -153,7 +161,7 @@ One excellent source of data is Stack Overflow, a programming question and answe
           in
           
           
-              <a class="badge badge-category" href="/categories/datacamp-projects">DATACAMP-PROJECTS</a>
+              <a class="badge badge-category" href="/categories/analysis">ANALYSIS</a>
               
           
       
@@ -168,10 +176,7 @@ One excellent source of data is Stack Overflow, a programming question and answe
           <a class="badge badge-tag" href="/tags/r">r</a>
            
       
-          <a class="badge badge-tag" href="/tags/programming-languages">programming languages</a>
-           
-      
-          <a class="badge badge-tag" href="/tags/python">python</a>
+          <a class="badge badge-tag" href="/tags/analysis">analysis</a>
           
       
     
@@ -186,12 +191,12 @@ One excellent source of data is Stack Overflow, a programming question and answe
   
   <div class="post">
     
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 
-<p><img src="/post/2020-04-07-the-evolution-of-programming-languages_files/languages.jpeg" />
-How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in?</p>
+<p>How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in?</p>
 <p>One excellent source of data is <a href="https://stackoverflow.com/">Stack Overflow</a>, a programming question and answer site with more than 16 million questions on programming topics. By measuring the number of questions about each technology, we can get an approximate sense of how many people are using it. We’re going to use open data from the <a href="https://data.stackexchange.com/">Stack Exchange Data Explorer</a> to examine the relative popularity of languages like R, Python, Java and Javascript have changed over time.</p>
-<p>Each Stack Overflow question has a tag, which marks a question to describe its topic or technology. For instance, there’s a tag for languages like <a href="https://stackoverflow.com/tags/r">R</a> or (Python)[<a href="https://stackoverflow.com/tags/python" class="uri">https://stackoverflow.com/tags/python</a>], and for packages like <a href="https://stackoverflow.com/questions/tagged/ggplot2">ggplot2</a> or <a href="https://stackoverflow.com/questions/tagged/pandas">pandas</a>.</p>
+<p>Each Stack Overflow question has a tag, which marks a question to describe its topic or technology. For instance, there’s a tag for languages like <a href="https://stackoverflow.com/tags/r">R</a> or <a href="https://stackoverflow.com/tags/python">Python</a>, and for packages like <a href="https://stackoverflow.com/questions/tagged/ggplot2">ggplot2</a> or <a href="https://stackoverflow.com/questions/tagged/pandas">pandas</a>.</p>
 <div id="load-the-libraries-and-dataset" class="section level3">
 <h3>1. Load the Libraries and DataSet</h3>
 <pre class="r"><code># Load libraries

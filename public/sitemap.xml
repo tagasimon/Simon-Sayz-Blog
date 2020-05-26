@@ -3,8 +3,48 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>/categories/analysis/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/analysis/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/05/26/exploring-the-kaggle-data-science-survey/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/2020/04/28/prophet-mbonye-interview-with-serwanja/</loc>
+    <lastmod>2020-04-28T14:37:28+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidytexts/</loc>
+    <lastmod>2020-04-28T14:37:28+03:00</lastmod>
   </url>
   
   <url>
@@ -13,48 +53,8 @@
   </url>
   
   <url>
-    <loc>/tags/na/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
     <loc>/2020/04/08/na-na-na/</loc>
     <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/nan/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/datacamp-projects/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/programming-languages/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/python/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
   </url>
   
   <url>

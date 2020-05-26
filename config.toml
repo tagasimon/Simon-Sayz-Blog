@@ -1,6 +1,6 @@
 baseurl = "/"
 languageCode = "en-us"
-title = "Simon"
+title = "Home"
 theme = "hyde-hyde"
 googleAnalytics = "UA-143283233-1"
 disqusShortname = "disqus_ZaSIgvoejX"
@@ -9,8 +9,11 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 [permalinks]
     post = "/:year/:month/:day/:slug/"
 [[menu.main]]
-    name = "About"
+    name = "About Me"
     url = "/about/"
+[[menu.main]]
+    name = "Portfolio"
+    url = "/portfolio/"
 
 [params]
     description = "Kinda a Data Scientist"

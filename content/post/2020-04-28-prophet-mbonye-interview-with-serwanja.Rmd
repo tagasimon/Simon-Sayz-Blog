@@ -1,0 +1,66 @@
+---
+title: 'Prophet Mbonye Interview with Serwanja '
+author: ''
+date: '2020-04-28'
+slug: prophet-mbonye-interview-with-serwanja
+categories:
+  - Analysis
+tags:
+  - R
+  - tidytexts
+lastmod: '2020-04-28T14:37:28+03:00'
+layout: post
+type: post
+highlight: no
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+**Elvis Mbonye Claims to have prophesied Corona Virus?? But that not the Point of this Blog.**
+
+Am just interested in what happened during the interview, what words were said, were they Positive or Negative. Did the Interview Spark any emotions like joy, anger, sadness, and so forth?? 
+That's what am going to be analysing here.
+
+Note : This isn't complete until the all the episodes of the interview are out.
+
+```{r}
+library(tidyverse)
+library(tidytext)
+library(wordcloud)
+```
+
+### How did i get the data??
+After a little research online, i realised i could scrape the auto generated subtitles by youtube and download them as a txt file then read it in excel. its not perfect but it works and its better than transcribing the audio which is another option.
+
+```{r}
+data <- readr::read_lines(file.choose()) %>% as_tibble()
+```
+
+### unnesting words to a single row each and remove stop words 
+```{r}
+data(stopwords)
+
+text_data <- data %>% 
+        unnest_tokens(word, value) %>% 
+        anti_join(stop_words)
+        
+```
+
+### What is the most common word during the interview??
+```{r}
+text_data %>% 
+        count(word, sort = TRUE) %>% 
+        head(20) %>% 
+        mutate(word = fct_reorder(word, n)) %>% 
+        ggplot(aes(word, n)) + 
+        geom_col() + 
+        coord_flip() +
+        labs(y="# of words")
+
+text_data %>%
+  anti_join(stop_words) %>%
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100))
+```
