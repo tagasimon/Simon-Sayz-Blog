@@ -1,0 +1,413 @@
+---
+title: TV, Halftime Shows, and the Big Game
+author: Simon Sayz
+date: '2020-05-27'
+slug: tv-halftime-shows-and-the-big-game
+categories:
+  - Analysis
+tags:
+  - analysis
+  - R
+cover: ''
+keywords:
+  - ''
+  - ''
+summary: ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="tv-halftime-shows-and-the-big-game" class="section level2">
+<h2>1. TV, halftime shows, and the Big Game</h2>
+<p>
+Whether or not you like American football, the Super Bowl is a spectacle. There is always a little something for everyone. For the die-hard fans, there is the game itself with blowouts, comebacks, and controversy. For the not so die-hard fans, there are the ridiculously expensive ads that are hilarious, gut-wrenching, thought-provoking, and sometimes weird. And of course, there are the halftime shows with the biggest musicians in the world entertaining us by <a href="https://youtu.be/ZD1QrIe--_Y?t=14">riding a giant mechanical tiger</a> or <a href="https://youtu.be/mjrdywp5nyE?t=62">leaping from the roof of the stadium</a>. It is a grand show! In this notebook, we’re going to explore how some of these elements interact with each other. After exploring and cleaning the data, we’re going to answer questions like:
+</p>
+<ul>
+<li>
+What are the most extreme game outcomes?
+</li>
+<li>
+How does the score difference affect television viewership?
+</li>
+<li>
+How have viewership, TV ratings, and advertisement costs evolved?
+</li>
+<li>
+Who are the most prolific musicians in terms of halftime show performances?
+</li>
+</ul>
+<p>
+<img src="https://assets.datacamp.com/production/project_691/img/left_shark.jpg" alt="Left Shark Steals The Show">
+<em><a href="https://www.flickr.com/photos/huntleypaton/16464994135/in/photostream/">Left Shark Steals The Show</a>. Katy Perry performing at halftime of Super Bowl XLIX. Photo by Huntley Paton. Attribution-ShareAlike 2.0 Generic (CC BY-SA 2.0).</em>
+</p>
+<p>
+The dataset we’ll use was <a href="https://en.wikipedia.org/wiki/Web_scraping">scraped</a> and polished from Wikipedia. It is made up of three CSV files, one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_champions">game data</a>, one with <a href="https://en.wikipedia.org/wiki/Super_Bowl_television_ratings">TV data</a>, and one with <a href="https://en.wikipedia.org/wiki/List_of_Super_Bowl_halftime_shows">halftime musician data</a> for all 52 Super Bowls through 2018.
+</p>
+<pre class="r"><code># Load packages
+library(tidyverse)
+
+# Load the CSV data
+super_bowls  &lt;-  read_csv(&quot;data/super_bowls.csv&quot;)
+tv  &lt;-  read_csv(&quot;data/tv.csv&quot;)
+halftime_musicians  &lt;-  read_csv(&quot;data/halftime_musicians.csv&quot;)
+
+# Display the first six rows of each tibble
+head(super_bowls)</code></pre>
+<pre><code>## # A tibble: 6 x 18
+##   date       super_bowl venue city  state attendance team_winner winning_pts
+##   &lt;date&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+## 1 2018-02-04         52 U.S.~ Minn~ Minn~      67612 Philadelph~          41
+## 2 2017-02-05         51 NRG ~ Hous~ Texas      70807 New Englan~          34
+## 3 2016-02-07         50 Levi~ Sant~ Cali~      71088 Denver Bro~          24
+## 4 2015-02-01         49 Univ~ Glen~ Ariz~      70288 New Englan~          28
+## 5 2014-02-02         48 MetL~ East~ New ~      82529 Seattle Se~          43
+## 6 2013-02-03         47 Merc~ New ~ Loui~      71024 Baltimore ~          34
+## # ... with 10 more variables: qb_winner_1 &lt;chr&gt;, qb_winner_2 &lt;chr&gt;,
+## #   coach_winner &lt;chr&gt;, team_loser &lt;chr&gt;, losing_pts &lt;dbl&gt;, qb_loser_1 &lt;chr&gt;,
+## #   qb_loser_2 &lt;chr&gt;, coach_loser &lt;chr&gt;, combined_pts &lt;dbl&gt;,
+## #   difference_pts &lt;dbl&gt;</code></pre>
+<pre class="r"><code>head(tv)</code></pre>
+<pre><code>## # A tibble: 6 x 9
+##   super_bowl network avg_us_viewers total_us_viewers rating_household
+##        &lt;dbl&gt; &lt;chr&gt;            &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;
+## 1         52 NBC          103390000               NA             43.1
+## 2         51 Fox          111319000        172000000             45.3
+## 3         50 CBS          111864000        167000000             46.6
+## 4         49 NBC          114442000        168000000             47.5
+## 5         48 Fox          112191000        167000000             46.7
+## 6         47 CBS          108693000        164100000             46.3
+## # ... with 4 more variables: share_household &lt;dbl&gt;, rating_18_49 &lt;dbl&gt;,
+## #   share_18_49 &lt;dbl&gt;, ad_cost &lt;dbl&gt;</code></pre>
+<pre class="r"><code>head(halftime_musicians)</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   super_bowl musician                              num_songs
+##        &lt;dbl&gt; &lt;chr&gt;                                     &lt;dbl&gt;
+## 1         52 Justin Timberlake                            11
+## 2         52 University of Minnesota Marching Band         1
+## 3         51 Lady Gaga                                     7
+## 4         50 Coldplay                                      6
+## 5         50 Beyoncé                                       3
+## 6         50 Bruno Mars                                    3</code></pre>
+</div>
+<div id="taking-note-of-dataset-issues" class="section level2">
+<h2>2. Taking note of dataset issues</h2>
+<p>
+From the quick look at the Super Bowl game data, we can see that the dataset appears whole except for missing values in the backup quarterback columns (<code>qb_winner_2</code> and <code>qb_loser_2</code>), which make sense given most starting QBs in the Super Bowl (<code>qb_winner_1</code> and <code>qb_loser_1</code>) play the entire game.
+</p>
+<p>
+From the visual inspection of TV and halftime musicians data, there is only one missing value displayed, but I’ve got a hunch there are more. The first Super Bowl was played on January 15, 1967, and I’m guessing some data (e.g., the number of songs performed) probably weren’t tracked reliably over time. Wikipedia is great but not perfect.
+</p>
+<p>
+Looking at a summary of the datasets shows us that there are multiple columns with null values.
+</p>
+<pre class="r"><code># Summary of the TV data
+summary(tv)</code></pre>
+<pre><code>##    super_bowl      network          avg_us_viewers      total_us_viewers   
+##  Min.   : 1.00   Length:53          Min.   : 24430000   Min.   : 51180000  
+##  1st Qu.:13.00   Class :character   1st Qu.: 73852000   1st Qu.:142900000  
+##  Median :26.00   Mode  :character   Median : 85240000   Median :153400000  
+##  Mean   :26.02                      Mean   : 80709585   Mean   :148872000  
+##  3rd Qu.:39.00                      3rd Qu.: 92570000   3rd Qu.:165550000  
+##  Max.   :52.00                      Max.   :114442000   Max.   :172000000  
+##                                                         NA&#39;s   :38         
+##  rating_household share_household  rating_18_49    share_18_49   
+##  Min.   :18.5     Min.   :36.00   Min.   :33.40   Min.   :77.00  
+##  1st Qu.:41.3     1st Qu.:63.00   1st Qu.:36.90   1st Qu.:77.25  
+##  Median :43.3     Median :67.00   Median :37.90   Median :78.50  
+##  Mean   :42.7     Mean   :66.38   Mean   :38.01   Mean   :78.17  
+##  3rd Qu.:46.0     3rd Qu.:71.00   3rd Qu.:39.50   3rd Qu.:79.00  
+##  Max.   :49.1     Max.   :78.00   Max.   :41.20   Max.   :79.00  
+##                                   NA&#39;s   :38      NA&#39;s   :47     
+##     ad_cost       
+##  Min.   :  37500  
+##  1st Qu.: 185000  
+##  Median : 850000  
+##  Mean   :1456712  
+##  3rd Qu.:2385365  
+##  Max.   :5000000  
+## </code></pre>
+<pre class="r"><code># Summary of the halftime musician data 
+summary(halftime_musicians)</code></pre>
+<pre><code>##    super_bowl      musician           num_songs     
+##  Min.   : 1.00   Length:134         Min.   : 1.000  
+##  1st Qu.:17.25   Class :character   1st Qu.: 1.000  
+##  Median :31.50   Mode  :character   Median : 2.000  
+##  Mean   :29.09                      Mean   : 2.955  
+##  3rd Qu.:41.00                      3rd Qu.: 3.250  
+##  Max.   :52.00                      Max.   :11.000  
+##                                     NA&#39;s   :46</code></pre>
+</div>
+<div id="combined-points-distribution" class="section level2">
+<h2>3. Combined points distribution</h2>
+<p>
+In the TV data, the following columns have a lot of missing values:
+</p>
+<ul>
+<li>
+<code>total_us_viewers</code> (amount of U.S. viewers who watched at least some part of the broadcast)
+</li>
+<li>
+<code>rating_18_49</code> (average % of U.S. adults 18-49 who live in a household with a TV that were watching for the entire broadcast)
+</li>
+<li>
+<code>share_18_49</code> (average % of U.S. adults 18-49 who live in a household with a TV <em>in use</em> that were watching for the entire broadcast)
+</li>
+</ul>
+<p>
+In halftime musician data, there are missing numbers of songs performed (<code>num_songs</code>) for about a third of the musicians.
+</p>
+<p>
+There are a lot of potential reasons for missing values. Were the data ever tracked? Would the research effort to fill in the gaps be worth it? Maybe. Watching every Super Bowl halftime show to get song counts could be pretty fun. But we don’t have time to do that now! Let’s take note of where the datasets are not perfect and start uncovering some insights.
+</p>
+<p>
+We’ll start by visualizing the distribution of combined points for each Super Bowl. Let’s also find the Super Bowls with the highest and lowest scores.
+</p>
+<pre class="r"><code># Reduce the size of the plots
+options(repr.plot.width = 5, repr.plot.height = 4)
+
+# Plot a histogram of combined points
+ggplot(super_bowls, aes(combined_pts)) +
+ geom_histogram(binwidth = 5) +
+ labs(x = &quot;Combined Points&quot;, y = &quot;Number of Super Bowls&quot;)</code></pre>
+<p><img src="/post/2020-05-27-tv-halftime-shows-and-the-big-game_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># Display the highest- and lowest-scoring Super Bowls
+super_bowls  %&gt;% 
+ filter(combined_pts &gt; 70 | combined_pts &lt; 25)</code></pre>
+<pre><code>## # A tibble: 5 x 18
+##   date       super_bowl venue city  state attendance team_winner winning_pts
+##   &lt;date&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+## 1 2018-02-04         52 U.S.~ Minn~ Minn~      67612 Philadelph~          41
+## 2 1995-01-29         29 Joe ~ Miam~ Flor~      74107 San Franci~          49
+## 3 1975-01-12          9 Tula~ New ~ Loui~      80997 Pittsburgh~          16
+## 4 1973-01-14          7 Memo~ Los ~ Cali~      90182 Miami Dolp~          14
+## 5 1969-01-12          3 Oran~ Miami Flor~      75389 New York J~          16
+## # ... with 10 more variables: qb_winner_1 &lt;chr&gt;, qb_winner_2 &lt;chr&gt;,
+## #   coach_winner &lt;chr&gt;, team_loser &lt;chr&gt;, losing_pts &lt;dbl&gt;, qb_loser_1 &lt;chr&gt;,
+## #   qb_loser_2 &lt;chr&gt;, coach_loser &lt;chr&gt;, combined_pts &lt;dbl&gt;,
+## #   difference_pts &lt;dbl&gt;</code></pre>
+</div>
+<div id="point-difference-distribution" class="section level2">
+<h2>4. Point difference distribution</h2>
+<p>
+Most of the combined scores are between 40 and 50 points, with the extremes being roughly equal distance away in opposite directions. At the highest combined scores of 74 and 75, are two games featuring dominant quarterback performances. One happened last year - Super Bowl LII when Tom Brady’s Patriots lost to Nick Foles’ underdog Eagles 33 to 41, for a combined score of 74.
+</p>
+<p>
+On the other end of the spectrum, we have Super Bowl III and VII, which featured tough defenses that dominated the games. We also have Super Bowl IX in New Orleans in 1975, whose 16-6 score can be attributed to inclement weather. Overnight rain made the field slick, and it was cold (46 °F / 8 °C), making it hard for the Steelers and Vikings to do much offensively. This was the second-coldest Super Bowl ever and the last to be played in inclement weather for over 30 years. The NFL realized people like points, I guess.
+</p>
+<p>
+<em>UPDATE: In Super Bowl LIII in 2019, the Patriots and Rams broke the record for the lowest-scoring Super Bowl with a combined score of 16 points (13-3 for the Patriots).</em>
+</p>
+<p>
+Now let’s take a look at the point difference between teams in each Super Bowl.
+</p>
+<pre class="r"><code># Reduce the size of the plots
+options(repr.plot.width = 5, repr.plot.height = 4)
+
+# Plot a histogram of point differences
+ggplot(super_bowls, aes(difference_pts)) +
+ geom_histogram(binwidth = 2) +
+ labs(x = &quot;Point Difference&quot;, y = &quot;Number of Super Bowls&quot;)</code></pre>
+<p><img src="/post/2020-05-27-tv-halftime-shows-and-the-big-game_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># Display the closest game and largest blow out
+super_bowls  %&gt;% 
+ filter(difference_pts == min(difference_pts) | difference_pts == max(difference_pts))</code></pre>
+<pre><code>## # A tibble: 2 x 18
+##   date       super_bowl venue city  state attendance team_winner winning_pts
+##   &lt;date&gt;          &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;             &lt;dbl&gt;
+## 1 1991-01-27         25 Tamp~ Tampa Flor~      73813 New York G~          20
+## 2 1990-01-28         24 Loui~ New ~ Loui~      72919 San Franci~          55
+## # ... with 10 more variables: qb_winner_1 &lt;chr&gt;, qb_winner_2 &lt;chr&gt;,
+## #   coach_winner &lt;chr&gt;, team_loser &lt;chr&gt;, losing_pts &lt;dbl&gt;, qb_loser_1 &lt;chr&gt;,
+## #   qb_loser_2 &lt;chr&gt;, coach_loser &lt;chr&gt;, combined_pts &lt;dbl&gt;,
+## #   difference_pts &lt;dbl&gt;</code></pre>
+</div>
+<div id="do-blowouts-translate-to-lost-viewers" class="section level2">
+<h2>5. Do blowouts translate to lost viewers?</h2>
+<p>
+The vast majority of Super Bowls are close games. Makes sense. Both teams are the best in their conference if they’ve made it this far. The closest game ever was the Buffalo Bills’ 1-point loss to the New York Giants in 1991, which is best remembered for Scott Norwood’s last-second missed field goal attempt that went <em><a href="https://www.youtube.com/watch?v=RPFZCGgjDSg">wide right</a></em>, kicking off four Bills Super Bowl losses in a row. Poor Scott. The biggest point spread so far is 45 points (!) when Hall of Famer, Joe Montana, led the San Francisco 49ers to victory in 1990, one year before the closest game ever.
+</p>
+<p>
+I remember watching the Seahawks crush the Broncos by 35 points (43-8) in 2014, which was a boring experience in my opinion. The game was never really close. I’m pretty sure we changed the channel at the end of the third quarter. Let’s combine the game data and TV data to see if this is a universal phenomenon. Do large point differences translate to lost viewers? We can plot <a href="https://en.wikipedia.org/wiki/Nielsen_ratings">household share</a> <em>(average percentage of U.S. households with a TV in use that were watching for the entire broadcast)</em> vs. point difference to find out.
+</p>
+<pre class="r"><code># Filter out Super Bowl I and join the game data and TV data
+games_tv &lt;- tv  %&gt;% 
+ filter(super_bowl != 1)  %&gt;% #We are removing Super Bowl I because it was broadcast on two networks.
+ inner_join(super_bowls, by = &quot;super_bowl&quot;)
+
+# Create a scatter plot with a linear regression model
+ggplot(games_tv, aes(difference_pts, share_household)) +
+ geom_point() +
+ geom_smooth(method = &quot;lm&quot;) +
+ labs(x = &quot;Point Difference&quot;, y = &quot;Viewership (household share)&quot;)</code></pre>
+<p><img src="/post/2020-05-27-tv-halftime-shows-and-the-big-game_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="viewership-and-the-ad-industry-over-time" class="section level2">
+<h2>6. Viewership and the ad industry over time</h2>
+<p>
+The downward sloping regression line and the 95% confidence interval for that regression <em>suggest</em> that bailing on the game if it is a blowout is common. Though it matches our intuition, we must take it with a grain of salt because the linear relationship in the data is weak due to our small sample size of 52 games.
+</p>
+<p>
+Regardless of the score, I bet most people stick it out for the halftime show, which is good news for the TV networks and advertisers. A 30-second spot costs a pretty <a href="https://www.businessinsider.com/super-bowl-commercials-cost-more-than-eagles-quarterback-earns-2018-1">$5 million</a> now, but has it always been that much? And how has the number of viewers and household ratings trended alongside advertisement cost? We can find out using line plots that share a “Super Bowl” x-axis.
+</p>
+<pre class="r"><code># Convert the data format for plotting
+games_tv_plot  &lt;- games_tv %&gt;% 
+    gather(key = &quot;category&quot;, value = &quot;value&quot;, avg_us_viewers, rating_household, ad_cost)  %&gt;% 
+    mutate(cat_name = case_when(category == &quot;avg_us_viewers&quot; ~ &quot;Average number of US viewers&quot;,
+                                category == &quot;rating_household&quot; ~ &quot;Household rating&quot;,
+                                category == &quot;ad_cost&quot; ~ &quot;Advertisement cost (USD)&quot;,
+                                TRUE ~ as.character(category)))
+
+# Plot the data
+ggplot(games_tv_plot, aes(super_bowl , value)) +
+ geom_line() +
+ facet_wrap(~ cat_name , scales = &quot;free&quot;, nrow = 3) + 
+ labs(x = &quot;Super Bowl&quot;, y = &quot;&quot;) +
+ theme_minimal()</code></pre>
+<p><img src="/post/2020-05-27-tv-halftime-shows-and-the-big-game_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="halftime-shows-werent-always-this-great" class="section level2">
+<h2>7. Halftime shows weren’t always this great</h2>
+<p>
+We can see that the number of viewers increased before advertisement costs did. Maybe the networks weren’t very data savvy and were slow to react? Makes sense since DataCamp didn’t exist back then.
+</p>
+<p>
+Another hypothesis: maybe halftime shows weren’t as entertaining in the earlier years? The modern spectacle that is the Super Bowl has a lot to do with of big halftime acts. I went down a YouTube rabbit hole, and it turns out that older halftime shows were not quite the spectacle they are today. Some examples:
+</p>
+<ul>
+<li>
+<a href="https://youtu.be/6wMXHxWO4ns?t=263">Super Bowl XXVI</a> in 1992: A Frosty The Snowman rap performed by children.
+</li>
+<li>
+<a href="https://www.youtube.com/watch?v=PKQTL1PYSag">Super Bowl XXIII</a> in 1989: An Elvis impersonator who did magic tricks and didn’t even sing one Elvis song.
+</li>
+<li>
+<a href="https://youtu.be/oSXMNbK2e98?t=436">Super Bowl XXI</a> in 1987: Tap dancing ponies. Okay, that was pretty awesome actually.
+</li>
+</ul>
+<p>
+It turns out that Michael Jackson’s Super Bowl XXVII performance, one of the most watched events in American TV history, was when the NFL realized that the having big-name halftime acts brought in more viewers. Let’s look at the halftime acts before Michael Jackson brought the NFL and entertainment industry together.
+</p>
+<pre class="r"><code># Filter and diplay halftime musicians before and including Super Bowl XXVII
+( pre_MJ  &lt;- halftime_musicians %&gt;% 
+ filter(super_bowl &lt;= 27) %&gt;% head(6) )</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   super_bowl musician                              num_songs
+##        &lt;dbl&gt; &lt;chr&gt;                                     &lt;dbl&gt;
+## 1         27 Michael Jackson                               5
+## 2         26 Gloria Estefan                                2
+## 3         26 University of Minnesota Marching Band        NA
+## 4         25 New Kids on the Block                         2
+## 5         24 Pete Fountain                                 1
+## 6         24 Doug Kershaw                                  1</code></pre>
+</div>
+<div id="who-has-the-most-halftime-show-appearances" class="section level2">
+<h2>8. Who has the most halftime show appearances?</h2>
+<p>
+Now that’s a lot of marching bands! There was also the American jazz clarinetist, Pete Fountain, and Miss Texas 1973 played the violin. Nothing against those performers - they are just simply not <a href="https://www.youtube.com/watch?v=suIg9kTGBVI">Beyoncé</a>. To be fair, no one is.
+</p>
+<p>
+Let’s find all the musicians who performed at the Super Bowl more than once and count their performances.
+</p>
+<pre class="r"><code># Display the musicians who performed more than once
+halftime_musicians  %&gt;% 
+    count(musician, sort = TRUE)  %&gt;% 
+    filter(n &gt; 1) </code></pre>
+<pre><code>## # A tibble: 14 x 2
+##    musician                                                             n
+##    &lt;chr&gt;                                                            &lt;int&gt;
+##  1 Grambling State University Tiger Marching Band                       6
+##  2 Al Hirt                                                              4
+##  3 Up with People                                                       4
+##  4 The Human Jukebox                                                    3
+##  5 Beyoncé                                                              2
+##  6 Bruno Mars                                                           2
+##  7 Florida A&amp;M University Marching 100 Band                             2
+##  8 Gloria Estefan                                                       2
+##  9 Justin Timberlake                                                    2
+## 10 Los Angeles Unified School District All City Honor Marching Band     2
+## 11 Nelly                                                                2
+## 12 Pete Fountain                                                        2
+## 13 Spirit of Troy                                                       2
+## 14 University of Minnesota Marching Band                                2</code></pre>
+</div>
+<div id="who-performed-the-most-songs-in-a-halftime-show" class="section level2">
+<h2>9. Who performed the most songs in a halftime show?</h2>
+<p>
+The world-famous <a href="https://www.youtube.com/watch?v=RL_3oqpHiDg">Grambling State University Tiger Marching Band</a> takes the crown with six appearances. Beyoncé, Justin Timberlake, Nelly, and Bruno Mars are the only post-Y2K musicians with multiple appearances (two each).
+</p>
+<p>
+Now let’s look at the number of songs performed in a halftime show. From our previous inspections, the <code>num_songs</code> column has a lot of missing values:
+</p>
+<ul>
+<li>
+A lot of the marching bands don’t have <code>num_songs</code> entries.
+</li>
+<li>
+For non-marching bands, there is a lot of missing data before Super Bowl XX.
+</li>
+</ul>
+<p>
+Let’s filter out marching bands by using a string match for “Marching” and “Spirit” (a common naming convention for marching bands is “Spirit of [something]”). We’ll only keep data from Super Bowls XX and later to address the missing data issue, and <em>then</em> let’s see who performed the most number of songs.
+</p>
+<pre class="r"><code>head(halftime_musicians, 2)</code></pre>
+<pre><code>## # A tibble: 2 x 3
+##   super_bowl musician                              num_songs
+##        &lt;dbl&gt; &lt;chr&gt;                                     &lt;dbl&gt;
+## 1         52 Justin Timberlake                            11
+## 2         52 University of Minnesota Marching Band         1</code></pre>
+<pre class="r"><code># Remove marching bands and data before Super Bowl XX
+musicians_songs  &lt;- halftime_musicians   %&gt;%  
+    filter(!str_detect(musician, &quot;Marching&quot;),
+           !str_detect(musician, &quot;Spirit&quot;),
+          super_bowl &gt; 20)
+
+# Plot a histogram of the number of songs per performance
+ggplot(musicians_songs, aes(num_songs)) + 
+    geom_histogram(binwidth = 1) +
+    labs(x = &quot;Number of songs per halftime show&quot;, y = &quot;Number of musicians&quot;)</code></pre>
+<p><img src="/post/2020-05-27-tv-halftime-shows-and-the-big-game_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code># Display the musicians with more than four songs per show
+musicians_songs  %&gt;% 
+    filter(num_songs &gt; 4)  %&gt;% 
+    arrange(desc(num_songs))</code></pre>
+<pre><code>## # A tibble: 13 x 3
+##    super_bowl musician            num_songs
+##         &lt;dbl&gt; &lt;chr&gt;                   &lt;dbl&gt;
+##  1         52 Justin Timberlake          11
+##  2         30 Diana Ross                 10
+##  3         49 Katy Perry                  8
+##  4         51 Lady Gaga                   7
+##  5         47 Beyoncé                     7
+##  6         41 Prince                      7
+##  7         23 Elvis Presto                7
+##  8         50 Coldplay                    6
+##  9         48 Bruno Mars                  6
+## 10         45 The Black Eyed Peas         6
+## 11         46 Madonna                     5
+## 12         44 The Who                     5
+## 13         27 Michael Jackson             5</code></pre>
+</div>
+<div id="conclusion" class="section level2">
+<h2>10. Conclusion</h2>
+<p>
+Most non-band musicians do 1 to 3 songs per halftime show. It’s important to note that the duration of the halftime show is fixed (roughly 12 minutes) so songs per performance is more a measure of how many hit songs you have (cram as many hit songs in as you can!). Timberlake went off in 2018 with 11 songs! Wow! Diana Ross comes in second with a ten song medley in 1996.
+</p>
+<p>
+In this notebook, we loaded, cleaned, and explored Super Bowl game, television, and halftime show data. We visualized the distributions of combined points, point differences, and halftime show performances using histograms. We used line plots to see how advertisement cost increases lagged behind viewership increases. And, we discovered that blowouts appear to lead to a drop in viewership.
+</p>
+<p>
+This year’s Big Game will be here before you know it. Who do you think will win Super Bowl LIII?
+</p>
+<p>
+<em>UPDATE: <a href="https://en.wikipedia.org/wiki/Super_Bowl_LIII">Spoiler alert</a>.</em>
+</p>
+<pre class="r"><code># 2018-2019 conference champions
+patriots &lt;-  &quot;New England Patriots&quot;
+rams  &lt;- &quot;Los Angeles Rams&quot;
+
+# Who will win Super Bowl LIII?
+super_bowl_LIII_winner  &lt;-  patriots
+paste(&quot;The winner of Super Bowl LIII will be the&quot;, super_bowl_LIII_winner)</code></pre>
+<pre><code>## [1] &quot;The winner of Super Bowl LIII will be the New England Patriots&quot;</code></pre>
+</div>

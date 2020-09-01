@@ -4,72 +4,112 @@
   
   <url>
     <loc>/categories/analysis/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/tags/analysis/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2020/05/26/exploring-the-kaggle-data-science-survey/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/r/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/2020/04/28/prophet-mbonye-interview-with-serwanja/</loc>
-    <lastmod>2020-04-28T14:37:28+03:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tags/tidytexts/</loc>
-    <lastmod>2020-04-28T14:37:28+03:00</lastmod>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>/categories/eli5/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/2020/04/08/na-na-na/</loc>
-    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+    <loc>/post/</loc>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/2020/04/07/the-evolution-of-programming-languages/</loc>
-    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
+    <loc>/tags/r/</loc>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/</loc>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/text-analysis-of-safeboda-app-google-play-store-reviews-in-r/</loc>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/tags/tidytexts/</loc>
+    <lastmod>2020-07-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/text-analysis-of-myairtel-app-google-play-store-reviews-in-r/</loc>
+    <lastmod>2020-07-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/text-analysis-of-xente-app-google-play-store-reviews-in-r/</loc>
+    <lastmod>2020-07-12T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/tv-halftime-shows-and-the-big-game/</loc>
+    <lastmod>2020-05-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/visualizing-covid-19/</loc>
+    <lastmod>2020-05-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/visualizing-inequalities-in-life-expectancy/</loc>
+    <lastmod>2020-05-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/who-is-drunk-and-when-in-ames-iowa/</loc>
+    <lastmod>2020-05-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/exploring-the-kaggle-data-science-survey/</loc>
+    <lastmod>2020-05-26T17:16:13+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/level-difficulty-in-candy-crush-saga/</loc>
+    <lastmod>2020-05-26T20:46:50+03:00</lastmod>
   </url>
   
   <url>
     <loc>/about/</loc>
-    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
+    <lastmod>2020-05-05T21:48:51-07:00</lastmod>
   </url>
   
   <url>
     <loc>/</loc>
-    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
+    <lastmod>2020-05-05T21:48:51-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/prophet-mbonye-interview-with-serwanja/</loc>
+    <lastmod>2020-04-28T14:37:28+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/na-na-na/</loc>
+    <lastmod>2020-04-08T11:18:33+03:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/post/the-evolution-of-programming-languages/</loc>
+    <lastmod>2020-04-07T23:01:54+03:00</lastmod>
   </url>
   
 </urlset>

@@ -1,0 +1,357 @@
+---
+title: "Text Analysis of Xente App Google Play Store Reviews in R"
+author: "Simon Sayz"
+date: '2020-07-12'
+output:
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: yes
+    toc_depth: 2
+    number_sections: yes
+categories: Analysis
+tags:
+- analysis
+- R
+- tidytexts
+cover: ''
+keywords:
+- ''
+- ''
+summary: ''
+slug: text-analysis-of-xente-app-google-play-store-reviews-in-r
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+
+## 1. Text Analysis of Xente App Google Play Store Reviews in R
+<p><img style="float: left; margin:5px 20px 5px 1px; width:40%" src="https://www.xente.co/assets/images/hero-img.jpg"></p>
+<p>Xente is payments, tickets and shopping in one app. [Xente](https://www.xente.co/), is a one-stop mobile shopping application. 
+
+- Pay for airtime, data, bill payments, gift vouchers and lots more
+- Book event/bus/movie tickets
+- Shop for electronics, clothes, and groceries – you name it from retailers you know and trust
+
+<p>In this notebook, I took a deep dive into the reviews to uncover what their customers think about the application, what they like/dislike about the application and uncover some patterns.</p>
+
+
+## 2. Source of the Data
+<p>The Dataset is freely available on [Google Play Store](https://play.google.com/store/apps/details?id=intelworld.business.client&showAllReviews=true) and was scrapped with [Beautiful Soup](https://pypi.org/project/beautifulsoup4/), a python library for scrapping websites and Loaded into R for further Text Analysis</p>. The script is not included here because this blog is focussed on R but you can achieve the same with [Rvest](https://rvest.tidyverse.org/)
+
+
+## 3. Load the Libraries
+Some of the Packages used in the Analysis
+```{r}
+library(tidyverse) 
+library(Amelia) ## missingness map
+library(rebus)  ## regular expressions
+library(bbplot) 
+library(tidytext)  ## text mining
+library(tidymodels) ## modeling
+library(lubridate) ## working with dates and time
+library(patchwork) ## patching multiple graphs
+library(ggthemes) 
+library(knitr)
+library(emo)  ## for emojis
+```
+
+
+## 3. Read in the Dataset
+Let's read the Dataset into R. Some of the Columns like names, user images will be left out for obvious privacy reasons and also wont be necessary in this analysis, but you can always find them on [Google Play Store](https://play.google.com/store/apps/details?id=com.airtel.africa.selfcare&showAllReviews=true) `r emo::ji("privacy")`
+```{r}
+reviews <- readr::read_csv(file.choose())  %>% 
+    select(-c(reviewId, userName, userImage, appId))
+
+reviews_copy <- reviews
+```
+
+
+## 4. Quick Glimpse of the Dataset
+```{r}
+glimpse(reviews_copy)
+```
+
+
+# 5. Missingness Map
+Some of the Columns are missing some observations for obvious reasons e.g The company doesn't reply to every single review and thus the column will miss some data.
+Xente Clearly replies to a big chunk of its customers on Google play store
+```{r}
+missmap(reviews_copy, col = c("Black", "Yellow"))
+```
+
+
+## 6. Some Basic Cleanup and Processing
+Let's extract the year, months and major version numbers in into separate columns, will be helpful for further analysis down the road. 
+```{r}
+## This will come in handy when am modelling
+pattern <- DGT %R% optional(DGT)
+
+reviews_processed <- reviews_copy %>% 
+        # na.omit(reviewCreatedVersion) %>% 
+        mutate(version_extracted = str_extract(reviewCreatedVersion, pattern = pattern)) %>%
+        mutate(version_nmbr = as.numeric(version_extracted)) %>% 
+        mutate(year = year(at),
+               month = month(at, label = TRUE), 
+               week_day = wday(at, label = TRUE))
+
+```
+
+## 7. What are the Most Common Used Words in the Reviews?
+Top 30 most common words in the reviews
+
+*Stop Words* and also Words like  "App" and "Xente" are filtered out as they don't bring much value to this analysis and way too common `r emo::ji("cut")`
+
+```{r}
+reviews_processed %>% 
+  unnest_tokens(word, content) %>% 
+  anti_join(stop_words, by="word") %>% 
+  filter(!word %in% c("app", "xente")) %>%
+  count(word, sort = TRUE) %>% 
+  head(30) %>% 
+  mutate(word = fct_reorder(word, n)) %>% 
+  ggplot(aes(word, n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x="", y="Count")
+
+
+```
+
+
+## 8. What are the Most Common Positive and Negative Words?
+Using the **Bing Lexicons**, you get scores for Positive/Negative Words, these are the Top 20 most common -ve and +ve Words
+
+```{r}
+reviews_processed %>% 
+  unnest_tokens(word, content) %>% 
+  inner_join(get_sentiments("bing")) %>% 
+  anti_join(stop_words, by="word") %>% 
+  select(word, sentiment) %>% 
+  count(word, sentiment, sort = TRUE) %>% 
+  ungroup() %>% 
+  group_by(sentiment)  %>% 
+  top_n(20) %>% 
+  ungroup() %>% 
+  mutate(word = fct_reorder(word, n)) %>% 
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = "free") + 
+  coord_flip() +
+  labs(y = "Contribution to Sentiment", x="")
+  
+```
+
+
+### 8.1 It is important to see which words contribute to your sentiment scores. 
+What exactly contribute most the different sentiment like anger, disgust, fear etc
+ 
+```{r fig.align='center'}
+reviews_processed %>%
+    unnest_tokens(word, content) %>% 
+    anti_join(stop_words, by="word") %>% 
+    inner_join(get_sentiments("nrc")) %>% 
+    # Count by word and sentiment
+    count(word, sentiment) %>% 
+    filter(sentiment %in% c("anger", "disgust", "sadness", "surprise")) %>%
+    # Group by sentiment
+    group_by(sentiment) %>%
+    # Take the top 10 words for each sentiment
+    top_n(10) %>%
+    ungroup() %>%
+    mutate(word = reorder(word, n)) %>%
+    # Set up the plot with aes()
+    ggplot(aes(word, n, fill=sentiment)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ sentiment, scales = "free") +
+    coord_flip() +
+    theme_fivethirtyeight()
+
+```
+Invalid and error are  biggest drivers of  the *sadness* Sentiment.
+
+### 8.2 Sentiment changes with time
+How have the different sentiments faired over the years, Let's look at Positive, Negative, Trust and Anger
+
+```{r fig.align='center'}
+sentiment_by_time <- reviews_processed %>%
+    unnest_tokens(word, content) %>% 
+    anti_join(stop_words, by="word") %>% 
+    # Define a new column using floor_date()
+    mutate(date = floor_date(at, unit = "3 months")) %>%
+    # Group by date
+    group_by(date) %>%
+    mutate(total_words = n()) %>%
+    ungroup() %>%
+    # Implement sentiment analysis using the NRC lexicon
+    inner_join(get_sentiments("nrc"), by="word")
+
+
+sentiment_by_time %>%
+    # Filter for positive and negative words
+    filter(sentiment %in% c("positive", "negative", "trust", "anger")) %>%
+    # Count by date, sentiment, and total_words
+    count(date, sentiment, total_words) %>%
+    ungroup() %>%
+    mutate(percent = n / total_words) %>%
+    # Set up the plot with aes()
+    ggplot(aes(date, percent, color = sentiment))+
+    geom_line(size = 1.5) +
+    geom_smooth(method = "lm", se = FALSE, lty = 2) +
+    expand_limits(y = 0) +
+    theme_fivethirtyeight()
+```
+**Trust** is dipping according to this graph
+
+
+<!-- ### 8.3 How have words been used over time  -->
+
+<!-- ```{r fig.align='center'} -->
+<!-- wrds <- c("otp", "data", "money", "free", "1gb", "bad") -->
+<!-- reviews_processed %>% -->
+<!--     unnest_tokens(word, content) %>%  -->
+<!--     anti_join(stop_words, by="word") %>%  -->
+<!--     mutate(date = floor_date(at, "3 month")) %>% -->
+<!--     filter(word %in% wrds ) %>% -->
+<!--     count(date, word) %>% -->
+<!--     ungroup() %>% -->
+<!--     ggplot(aes(date, n, color = word)) + -->
+<!--     # Make facets by word -->
+<!--     facet_wrap(~ word) + -->
+<!--     geom_line(size = 1.5, show.legend = FALSE) + -->
+<!--     geom_smooth(method = "lm", se = FALSE, lty = 2) + -->
+<!--     expand_limits(y = 0) + -->
+<!--     # theme(legend.position = "none") + -->
+<!--     theme_fivethirtyeight() -->
+<!-- ``` -->
+<!-- Words picked at Random from the most common words, Looks like *1gb* and *Free* peaked at in the Same Month. Could have been a promotion or somthing close to that. -->
+
+### 8.3 What is the Average Rating for a Word
+These are words that appeared more than x10 
+```{r fig.align='center'}
+reviews_processed %>%
+  unnest_tokens(word, content) %>% 
+  anti_join(stop_words, by="word") %>% 
+  group_by(word) %>% 
+  summarize(avg_rating = mean(score, na.rm = TRUE),
+            n = n()) %>%
+  filter(n > 10) %>% 
+  arrange(avg_rating)
+
+reviews_processed %>%
+  unnest_tokens(word, content) %>% 
+  anti_join(stop_words, by="word") %>% 
+  group_by(word) %>% 
+  summarize(avg_rating = mean(score, na.rm = TRUE),
+            n = n()) %>%
+  filter(n > 10) %>% 
+  arrange(desc(avg_rating))
+
+```
+
+
+# PART 2
+
+So far we’ve considered words as individual units, and considered their relationships to sentiments. However, many interesting text analyses are based on the relationships between words, e.g examining which words tend to follow others immediately
+
+
+## 9 Visualizing a network of bigrams
+
+Lets visualize all of the relationships among words simultaneously, rather than just the top few at a time.
+
+```{r fig.align='center'}
+library(igraph)
+library(ggraph)
+library(widyr)
+
+set.seed(12345)
+
+bigrams_ratings <- reviews_processed %>%
+  unnest_tokens(bigrams, content, token = "ngrams", n = 2) %>% 
+  select(bigrams, everything())
+  # sample_n(10) %>% 
+  # pull(bigrams)
+
+bigrams_ratings_separated <- bigrams_ratings %>% 
+  separate(bigrams, c("word1", "word2", sep = " ")) %>% 
+  filter(!word1 %in% stop_words$word) %>%
+  filter(!word2 %in% stop_words$word) %>% 
+  count(word1, word2, sort = TRUE)
+
+bigram_graph <- bigrams_ratings_separated %>% 
+  filter(n > 2) %>% 
+  graph_from_data_frame()
+
+
+a <- grid::arrow(type = "closed", length = unit(.15, "inches"))
+
+ggraph(bigram_graph, layout = "fr") +
+  geom_edge_link(aes(edge_alpha = n), show.legend = FALSE,
+                 arrow = a, end_cap = circle(.07, 'inches')) +
+  geom_node_point(color = "lightblue", size = 5) +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 1) +
+  theme_void()
+```
+This is a small dataset and there are a few pairs and triplets "Mobile Money" with some centers of nodes like *app* and *airtime*
+
+## 9.1 Words preceded by Not, No, Never, Without
+By performing sentiment analysis on the bigram data, we can examine how often sentiment-associated words are preceded by “not” or other negating words like "no", "Never" and "Without"
+
+
+```{r fig.align='center'}
+negation_words <- c("not", "no", "never", "without")
+AFINN <- get_sentiments("afinn")
+bigrams_ratings %>%
+  separate(bigrams, into = c("word1", "word2"), sep = " ") %>% 
+  filter(word1 %in% negation_words)  %>%   
+  inner_join(AFINN, by = c(word2 = "word")) %>%
+  count(word1, word2, value, sort = TRUE) %>% 
+  mutate(contribution = n * value) %>%
+  arrange(desc(abs(contribution))) %>%
+  head(30) %>% 
+  mutate(word2 = reorder(word2, contribution)) %>%
+  ggplot(aes(word2, n * value, fill = n * value > 0)) +
+  geom_col(show.legend = FALSE) +
+  xlab("Words preceded by \"not\"") +
+  ylab("Sentiment value * number of occurrences") +
+  coord_flip() +
+  labs(title = "Words Preceeded by NOT...")
+  # facet_wrap(~word1, ncol = 2)
+```
+
+
+
+
+## 9.2 Word Cloud
+Text analysis is never complete without a word cloud. `r emo::ji("smile")`
+
+```{r}
+library(wordcloud)
+
+reviews_processed %>%
+  unnest_tokens(word, content) %>% 
+  anti_join(stop_words, by="word") %>% 
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100))
+
+```
+
+
+### Future Work
+1. A Sentiment Model to Predict a Rating Based the content in the Review.
+
+2. Work on an Interactive Web Application to bring the Analysis to Life for any Application on Google Play Store
+
+3. An R Package for easier and further Analysis.
+
+### Helpul Links
+- (R for Data Science)[https://r4ds.had.co.nz/]
+- (Text Mining in R)[https://www.tidytextmining.com/]
+- (Sentiment Anlysis in R from DataCamp)[https://campus.datacamp.com/]

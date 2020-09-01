@@ -1,31 +1,115 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home</title>
+    <title>Simon Sayz</title>
     <link>/</link>
-    <description>Recent content on Home</description>
+    <description>Recent content on Simon Sayz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 05 May 2016 21:48:51 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 05 May 2020 21:48:51 -0700</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Text Analysis of SafeBoda App Google Play Store Reviews in R</title>
+      <link>/post/text-analysis-of-safeboda-app-google-play-store-reviews-in-r/</link>
+      <pubDate>Thu, 23 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/text-analysis-of-safeboda-app-google-play-store-reviews-in-r/</guid>
+      <description>1. Text Analysis of SafeBoda App Google Play Store Reviews in RSafe Boda is an app with a social mission: to improve the welfare and livelihoods in Africa by empowering people.Safe Boda also works on providing value to consumers and drivers with additional financial services, payments and other on-demand services to keep Africa moving forward.
+In this notebook, I took a deep dive into the reviews to uncover what their customers think about the application, what they like/dislike about the application and uncover some patterns.</description>
+    </item>
+    
+    <item>
+      <title>Text Analysis of MyAirtel App Google Play Store Reviews in R</title>
+      <link>/post/text-analysis-of-myairtel-app-google-play-store-reviews-in-r/</link>
+      <pubDate>Sun, 12 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/text-analysis-of-myairtel-app-google-play-store-reviews-in-r/</guid>
+      <description>1. Text Analysis of MyAirtel App Google Play Store Reviews in ROnline Recharge Mobile, Bill Payments, Money Transfer Bank &amp;amp; Wallet, this is what MyAirtel App promises to deliver to its customer. Airtel Uganda, is an Indian global telecommunications services company based in New Delhi, India. It operates in 18 countries across South Asia and Africa, and also in the Channel IslandsIn this notebook, I took a deep dive into the reviews to uncover what their customers think about the application, what they like/dislike about the application and uncover some patterns.</description>
+    </item>
+    
+    <item>
+      <title>Text Analysis of Xente App Google Play Store Reviews in R</title>
+      <link>/post/text-analysis-of-xente-app-google-play-store-reviews-in-r/</link>
+      <pubDate>Sun, 12 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/text-analysis-of-xente-app-google-play-store-reviews-in-r/</guid>
+      <description>1. Text Analysis of Xente App Google Play Store Reviews in RXente is payments, tickets and shopping in one app. Xente, is a one-stop mobile shopping application.
+Pay for airtime, data, bill payments, gift vouchers and lots moreBook event/bus/movie ticketsShop for electronics, clothes, and groceries – you name it from retailers you know and trustIn this notebook, I took a deep dive into the reviews to uncover what their customers think about the application, what they like/dislike about the application and uncover some patterns.</description>
+    </item>
+    
+    <item>
+      <title>TV, Halftime Shows, and the Big Game</title>
+      <link>/post/tv-halftime-shows-and-the-big-game/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/tv-halftime-shows-and-the-big-game/</guid>
+      <description>1. TV, halftime shows, and the Big GameWhether or not you like American football, the Super Bowl is a spectacle. There is always a little something for everyone. For the die-hard fans, there is the game itself with blowouts, comebacks, and controversy. For the not so die-hard fans, there are the ridiculously expensive ads that are hilarious, gut-wrenching, thought-provoking, and sometimes weird. And of course, there are the halftime shows with the biggest musicians in the world entertaining us by riding a giant mechanical tiger or leaping from the roof of the stadium.</description>
+    </item>
+    
+    <item>
+      <title>Visualizing COVID-19</title>
+      <link>/post/visualizing-covid-19/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/visualizing-covid-19/</guid>
+      <description>1. From epidemic to pandemicIn December 2019, COVID-19 coronavirus was first identified in the Wuhan region of China. By March 11, 2020, the World Health Organization (WHO) categorized the COVID-19 outbreak as a pandemic. A lot has happened in the months in between with major outbreaks in Iran, South Korea, and Italy.We know that COVID-19 spreads through respiratory droplets, such as through coughing, sneezing, or speaking.</description>
+    </item>
+    
+    <item>
+      <title>Visualizing Inequalities in Life Expectancy</title>
+      <link>/post/visualizing-inequalities-in-life-expectancy/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/visualizing-inequalities-in-life-expectancy/</guid>
+      <description>1. United Nations life expectancy dataLife expectancy at birth is a measure of the average a living being is expected to live. It takes into account several demographic factors like gender, country, or year of birth.Life expectancy at birth can vary along time or between countries because of many causes: the evolution of medicine, the degree of development of countries, or the effect of armed conflicts.</description>
+    </item>
+    
+    <item>
+      <title>Who Is Drunk and When in Ames, Iowa</title>
+      <link>/post/who-is-drunk-and-when-in-ames-iowa/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/who-is-drunk-and-when-in-ames-iowa/</guid>
+      <description>1. Breath alcohol tests in Ames, Iowa, USAAmes, Iowa, USA is the home of Iowa State University, a land grant university with over 36,000 students. By comparison, the city of Ames, Iowa, itself only has about 65,000 residents. As with any other college town, Ames has had its fair share of alcohol-related incidents. (For example, Google ‘VEISHEA riots 2014’.) We will take a look at some breath alcohol test data from Ames that is published by the State of Iowa.</description>
+    </item>
+    
+    <item>
       <title>Exploring the Kaggle Data Science Survey</title>
-      <link>/2020/05/26/exploring-the-kaggle-data-science-survey/</link>
+      <link>/post/exploring-the-kaggle-data-science-survey/</link>
       <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/05/26/exploring-the-kaggle-data-science-survey/</guid>
+      <guid>/post/exploring-the-kaggle-data-science-survey/</guid>
       <description>1. Welcome to the world of data scienceThroughout the world of data science, there are many languages and tools that can be used to complete a given task. While you are often able to use whichever tool you prefer, it is often important for analysts to work with similar platforms so that they can share their code with one another. Learning what professionals in the data science industry use while at work can help you gain a better understanding of things that you may be asked to do in the future.</description>
     </item>
     
     <item>
+      <title>Level Difficulty in Candy Crush Saga</title>
+      <link>/post/level-difficulty-in-candy-crush-saga/</link>
+      <pubDate>Tue, 26 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/level-difficulty-in-candy-crush-saga/</guid>
+      <description>1. Candy Crush SagaCandy Crush Saga is a hit mobile game developed by King (part of Activision|Blizzard) that is played by millions of people all around the world. The game is structured as a series of levels where players need to match similar candy together to (hopefully) clear the level and keep progressing on the level map. If you are one of the few that haven’t played Candy Crush, here’s a short demo:Candy Crush has more than 3000 levels, and new ones are added every week.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>/about/</link>
+      <pubDate>Tue, 05 May 2020 21:48:51 -0700</pubDate>
+      
+      <guid>/about/</guid>
+      <description>My Name is Kazooba Simon. I am a Web and Mobile App Developer and am making my way into the data science world. This is my Blog about Data, Data Visualisation, Modelling and fun with a special focus on R. All opinions expressed here are my own, and i dont represent anyone else.
+Contact Me You can find me on Twitter, where i am almost everyday.</description>
+    </item>
+    
+    <item>
       <title>Prophet Mbonye Interview with Serwanja </title>
-      <link>/2020/04/28/prophet-mbonye-interview-with-serwanja/</link>
+      <link>/post/prophet-mbonye-interview-with-serwanja/</link>
       <pubDate>Tue, 28 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/04/28/prophet-mbonye-interview-with-serwanja/</guid>
+      <guid>/post/prophet-mbonye-interview-with-serwanja/</guid>
       <description>Elvis Mbonye Claims to have prophesied Corona Virus?? But that not the Point of this Blog.
 Am just interested in what happened during the interview, what words were said, were they Positive or Negative. Did the Interview Spark any emotions like joy, anger, sadness, and so forth??That’s what am going to be analysing here.
 Note : This isn’t complete until the all the episodes of the interview are out.</description>
@@ -33,10 +117,10 @@ Note : This isn’t complete until the all the episodes of the interview are out
     
     <item>
       <title>NA == NA = TRUE? Wrong</title>
-      <link>/2020/04/08/na-na-na/</link>
+      <link>/post/na-na-na/</link>
       <pubDate>Wed, 08 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/04/08/na-na-na/</guid>
+      <guid>/post/na-na-na/</guid>
       <description>Why is NA == NA = NA?Most Objects in R compared to themselves return TRUE but no NA.It’s actually i had never thought about but thinking about it makes some alot of sense, Comparing two Unknowns shouldn’t be return TRUE.
 Let’s Look at some of the Most Common examples that return TRUE
 10 == 10## [1] TRUE-10 == -10## [1] TRUEFALSE == FALSE## [1] TRUE&amp;quot;NA&amp;quot; == &amp;quot;NA&amp;quot;## [1] TRUEThis is a string “NA” and not the NA we are talking about and will return a TRUE just like any other similar string comparison</description>
@@ -44,22 +128,12 @@ Let’s Look at some of the Most Common examples that return TRUE
     
     <item>
       <title>The Evolution of Programming Languages</title>
-      <link>/2020/04/07/the-evolution-of-programming-languages/</link>
+      <link>/post/the-evolution-of-programming-languages/</link>
       <pubDate>Tue, 07 Apr 2020 00:00:00 +0000</pubDate>
       
-      <guid>/2020/04/07/the-evolution-of-programming-languages/</guid>
+      <guid>/post/the-evolution-of-programming-languages/</guid>
       <description>How can we tell what programming languages and technologies are used by the most people? How about what languages are growing and which are shrinking, so that we can tell which are most worth investing time in?
 One excellent source of data is Stack Overflow, a programming question and answer site with more than 16 million questions on programming topics. By measuring the number of questions about each technology, we can get an approximate sense of how many people are using it.</description>
-    </item>
-    
-    <item>
-      <title>About Me</title>
-      <link>/about/</link>
-      <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
-      
-      <guid>/about/</guid>
-      <description>My Name is Kazooba Simon. I am a Web and Mobile App Developer and am making my way into the data science world. This is my Blog about Data, Data Visualisation, Modelling and fun with a special focus on R. All opinions expressed here are my own, and i dont represent anyone else.
-Contact Me You can find me on Twitter, where i am almost everyday. You can also reach me directly on Whatsapp</description>
     </item>
     
   </channel>

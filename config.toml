@@ -1,31 +1,25 @@
 baseurl = "/"
+title = "Simon Sayz"
 languageCode = "en-us"
-title = "Home"
-theme = "hyde-hyde"
+theme = "github-style"
 googleAnalytics = "UA-143283233-1"
 disqusShortname = "disqus_ZaSIgvoejX"
-ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 
-[permalinks]
-    post = "/:year/:month/:day/:slug/"
-[[menu.main]]
-    name = "About Me"
-    url = "/about/"
-[[menu.main]]
-    name = "Portfolio"
-    url = "/portfolio/"
+
 
 [params]
-    description = "Kinda a Data Scientist"
-
-    # options for highlight.js (version, additional languages, and theme)
-    highlightjsVersion = "9.12.0"
-    highlightjsCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    highlightjsLang = ["r", "yaml"]
-    highlightjsTheme = "github"
-
-    MathJaxCDN = "//cdnjs.cloudflare.com/ajax/libs"
-    MathJaxVersion = "2.7.5"
+    author = "Simon Sayz"
+    status = "<enjoy> My Blog </enjoy>"
+    description = "I am an Aspiring Data Scientist: Comfortable in R, Python, Tableau, Shiny, SQL"
+    twitter = "simonsayzdgtl"
+	linkedin = "simon-sayz"
+	github = "tagasimon"
+	shiny = "http://67.207.81.13/shiny/"
+	tabl = "https://public.tableau.com/profile/kazooba.simon"
+    email = "smkabz@gmail.com"
+    avatar = ""
+    url = "https://simonsayz.xyz/"
+    keywords = "blog, R, tidyverse, Data Science"
 
     # path to the favicon, under "static"
     favicon = "favicon.ico"
@@ -35,9 +29,3 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
     width = 50
     height = 50
     alt = "Logo"
-[params.social]
-	twitter = "https://twitter.com/simonsayzdgtl"
-	linkedin = "https://www.linkedin.com/in/simon-sayz/"
-	github = "https://github.com/tagasimon"
-    gravatar = "smkabz@gmail.com"
-

@@ -1,0 +1,189 @@
+---
+title: Who Is Drunk and When in Ames, Iowa
+author: Simon Sayz
+date: '2020-05-27'
+slug: who-is-drunk-and-when-in-ames-iowa
+categories:
+  - Analysis
+tags:
+  - analysis
+  - R
+cover: ''
+keywords:
+  - ''
+  - ''
+summary: ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="breath-alcohol-tests-in-ames-iowa-usa" class="section level2">
+<h2>1. Breath alcohol tests in Ames, Iowa, USA</h2>
+<p>
+Ames, Iowa, USA is the home of Iowa State University, a land grant university with over 36,000 students. By comparison, the city of Ames, Iowa, itself only has about 65,000 residents. As with any other college town, Ames has had its fair share of alcohol-related incidents. (For example, Google ‘VEISHEA riots 2014’.) We will take a look at some breath alcohol test data from Ames that is published by the State of Iowa.
+</p>
+<p>
+<img style="width:500px" src="https://assets.datacamp.com/production/project_208/img/usa.jpg">
+</p>
+<p>
+The data file <code>‘breath.csv’</code> contains 1,556 readings from breath alcohol tests administered by the Ames and Iowa State University Police Departments from January 2013 to December 2017. The columns in this data set are <code>year</code>, <code>month</code>, <code>day</code>, <code>hour</code>, <code>location</code>, <code>gender</code>, <code>Res1</code>, <code>Res2</code>.
+</p>
+<pre class="r"><code># Load the packages 
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+# Read the data into your workspace
+ba_data &lt;- readr::read_csv(&quot;data/breath_alcohol_ames.csv&quot;)
+
+# Quickly inspect the data
+head(ba_data)</code></pre>
+<pre><code>## # A tibble: 6 x 8
+##    year month   day  hour location gender  Res1  Res2
+##   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;
+## 1  2017    12    17     1 Ames PD  M      0.046 0.046
+## 2  2017    12    14     3 ISU PD   F      0.121 0.12 
+## 3  2017    12    10     5 ISU PD   F      0.068 0.067
+## 4  2017    12    10     3 ISU PD   F      0.077 0.077
+## 5  2017    12     9     2 ISU PD   M      0.085 0.084
+## 6  2017    12     9     1 Ames PD  M      0.16  0.161</code></pre>
+<pre class="r"><code># Obtain counts for each year 
+ba_year &lt;- ba_data  %&gt;%  
+    count(year)</code></pre>
+</div>
+<div id="what-is-the-busiest-police-department-in-ames" class="section level2">
+<h2>2. What is the busiest police department in Ames?</h2>
+<p>
+There are two police departments in the data set: the Iowa State University Police Department and the Ames Police Department. Which one administers more breathalyzer tests?
+</p>
+<pre class="r"><code># Count the totals for each department
+pds &lt;- ba_data  %&gt;% 
+    count(location, sort = TRUE)</code></pre>
+</div>
+<div id="nothing-good-happens-after-2am" class="section level2">
+<h2>3. Nothing Good Happens after 2am</h2>
+<p>
+<img src="https://assets.datacamp.com/production/project_208/img/himym02.jpg" style="float: left;margin:5px 20px 5px 1px;width:300px">
+</p>
+<p>
+We all know that “nothing good happens after 2am.” Thus, there are inevitably some times of the day when breath alcohol tests, especially in a college town like Ames, are most and least common. Which hours of the day have the most and least breathalyzer tests?
+</p>
+<pre class="r"><code># Count by hour and arrange by descending frequency
+hourly &lt;- ba_data  %&gt;% 
+    count(hour, sort= TRUE)
+
+# Use a geom_ to create the appropriate bar chart
+ggplot(hourly, aes(x = hour, weight = n)) + geom_bar()</code></pre>
+<p><img src="/post/2020-05-27-who-is-drunk-and-when-in-ames-iowa_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="breathalyzer-tests-by-month" class="section level2">
+<h2>4. Breathalyzer tests by month</h2>
+<p>
+Now that we have discovered which time of day is most common for breath alcohol tests, we will determine which time of the year has the most breathalyzer tests. Which month will have the most recorded tests?
+</p>
+<pre class="r"><code># Count by month and arrange by descending frequency
+monthly &lt;- ba_data  %&gt;% count(month, sort = TRUE)
+
+# Make month a factor
+monthly$month &lt;- as.factor(monthly$month)
+
+# Use a geom_ to create the appropriate bar chart
+ggplot(monthly, aes(month, weight = n)) + geom_bar()</code></pre>
+<p><img src="/post/2020-05-27-who-is-drunk-and-when-in-ames-iowa_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="college" class="section level2">
+<h2>5. COLLEGE</h2>
+<p>
+<img src="https://assets.datacamp.com/production/project_208/img/PF2081John-Belushi-College-Posters.jpg" style="float: left;margin:5px 20px 5px 1px">
+</p>
+<p>
+When we think of (binge) drinking in college towns in America, we usually think of something like this image at the left. And so, one might suspect that breath alcohol tests are given to men more often than women and that men drink more than women.
+</p>
+<pre class="r"><code># Count by gender 
+ba_data %&gt;% count(gender, sort = TRUE)</code></pre>
+<pre><code>## # A tibble: 3 x 2
+##   gender     n
+##   &lt;chr&gt;  &lt;int&gt;
+## 1 M       1102
+## 2 F        425
+## 3 &lt;NA&gt;      29</code></pre>
+<pre class="r"><code># Create a dataset with no NAs in gender 
+clean_gender &lt;- ba_data  %&gt;% 
+    filter(!is.na(gender))
+
+# Create a mean test result variable and save as mean_bas
+mean_bas &lt;- clean_gender  %&gt;% 
+    mutate(meanRes = (Res1+Res2)/2)
+
+# Create side-by-side boxplots to compare the mean blood alcohol levels of men and women
+ggplot(mean_bas, aes(gender, meanRes)) + geom_boxplot()</code></pre>
+<p><img src="/post/2020-05-27-who-is-drunk-and-when-in-ames-iowa_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="above-the-legal-limit" class="section level2">
+<h2>6. Above the legal limit</h2>
+<p>
+In the USA, it is illegal to drive with a blood alcohol concentration (BAC) above 0.08%. This is the case for <a href="https://www.dmv.org/automotive-law/dui.php">all 50 states</a>. Assuming everyone tested in our data was driving (though we have no way of knowing this from the data), if either of the results (<code>Res1</code>, <code>Res2</code>) are above 0.08, the person would be charged with DUI (driving under the influence).
+</p>
+<pre class="r"><code># Filter the data
+duis &lt;- ba_data  %&gt;% 
+    filter(Res1 &gt; 0.08 | Res2 &gt; 0.08)
+
+# Proportion of tests that would have resulted in a DUI
+# .... YOUR CODE FOR TASK 6 ....
+
+p_dui &lt;- nrow(duis) / nrow(ba_data)</code></pre>
+</div>
+<div id="breathalyzer-tests-is-there-a-pattern-over-time" class="section level2">
+<h2>7. Breathalyzer tests: is there a pattern over time?</h2>
+<p>
+We previously saw that 2 a.m. is the most common time of day for breathalyzer tests to be administered, and August is the most common month of the year for breathalyzer tests. Now, we look at the weeks in the year over time. We briefly use the <a href="http://lubridate.tidyverse.org/"><code>lubridate</code></a> package for a bit of date-time manipulation.
+</p>
+<pre class="r"><code>library(lubridate) 
+
+# Create date variable using paste() and ymd()
+ba_data &lt;- ba_data %&gt;% mutate(date = ymd(paste(year, month, day)))
+
+# Create a week variable using week()
+ba_data &lt;- ba_data %&gt;% mutate(week = week(date))</code></pre>
+</div>
+<div id="looking-at-timelines" class="section level2">
+<h2>8. Looking at timelines</h2>
+<p>
+How do the weeks differ over time? One of the most common data visualizations is the time series, a line tracking the changes in a variable over time. We will use the new <code>week</code> variable to look at test frequency over time. We end with a time series plot showing frequency of breathalyzer tests by week in year, with one line for each year.
+</p>
+<pre class="r"><code># Create the weekly data set 
+weekly &lt;- ba_data %&gt;%  count(week, year)
+
+# Make year a factor
+weekly &lt;- weekly %&gt;% mutate(year = as.factor(year))
+
+# Create the time series plot with one line for each year
+ggplot(weekly, aes(x = week, y = n)) + 
+  geom_line() + 
+  geom_point(aes(color = year)) +  
+  scale_x_continuous(breaks = seq(0,52,2))</code></pre>
+<p><img src="/post/2020-05-27-who-is-drunk-and-when-in-ames-iowa_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="the-end-of-veishea" class="section level2">
+<h2>9. The end of VEISHEA</h2>
+<p>
+From <a href="https://en.wikipedia.org/wiki/VEISHEA">Wikipedia</a>:
+“VEISHEA was an annual week-long celebration held each spring on the campus of Iowa State University in Ames, Iowa. The celebration featured an annual parade and many open-house demonstrations of the university facilities and departments. Campus organizations exhibited products, technologies, and held fundraisers for various charity groups. In addition, VEISHEA brought speakers, lecturers, and entertainers to Iowa State. […] VEISHEA was the largest student-run festival in the nation, bringing in tens of thousands of visitors to the campus each year.”
+</p>
+<p>
+This over 90-year tradition in Ames was <a href="https://www.news.iastate.edu/news/2014/08/07/veisheaend">terminated permanently</a> after <a href="https://www.desmoinesregister.com/story/news/crime-and-courts/2014/04/09/veishea-ames-car-tipping/7495935/">riots in 2014</a>, where drunk celebrators flipped over multiple vehicles and tore light poles down. This was not the first incidence of violence and severe property damage in VEISHEA’s history. Did former President Leath make the right decision?
+</p>
+<pre class="r"><code># Run this code to create the plot 
+ggplot() + 
+  geom_point(data = weekly, aes(x = week, y = n, color = year)) + 
+  geom_line(data = weekly, aes(x = week, y = n, color = year)) +  # included to make the plot more readable 
+  geom_segment(data = NULL, arrow = arrow(angle = 20, length = unit(0.1, &quot;inches&quot;),
+                                          ends = &quot;last&quot;, type = &quot;closed&quot;), 
+               aes(x = c(20,20), xend = c(15.5,16), y = c(21, 20), yend = c(21, 12.25))) + 
+  geom_text(data = NULL, aes(x = 23, y = 20.5, label = &quot;VEISHEA Weeks&quot;), size = 3) + 
+  scale_x_continuous(breaks = seq(0,52,2)) </code></pre>
+<p><img src="/post/2020-05-27-who-is-drunk-and-when-in-ames-iowa_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<pre class="r"><code># Make a decision about VEISHEA. TRUE or FALSE?  
+cancelling_VEISHEA_was_right &lt;- TRUE</code></pre>
+</div>

@@ -1,0 +1,368 @@
+---
+title: "Text Analysis of Xente App Google Play Store Reviews in R"
+author: "Simon Sayz"
+date: '2020-07-12'
+output:
+  word_document:
+    toc: yes
+    toc_depth: '2'
+  html_document:
+    toc: yes
+    toc_float:
+      collapsed: yes
+    toc_depth: 2
+    number_sections: yes
+categories: Analysis
+tags:
+- analysis
+- R
+- tidytexts
+cover: ''
+keywords:
+- ''
+- ''
+summary: ''
+slug: text-analysis-of-xente-app-google-play-store-reviews-in-r
+editor_options:
+  chunk_output_type: console
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="text-analysis-of-xente-app-google-play-store-reviews-in-r" class="section level2">
+<h2>1. Text Analysis of Xente App Google Play Store Reviews in R</h2>
+<p>
+<img style="float: left; margin:5px 20px 5px 1px; width:40%" src="https://www.xente.co/assets/images/hero-img.jpg">
+</p>
+<p>
+<p>Xente is payments, tickets and shopping in one app. <a href="https://www.xente.co/">Xente</a>, is a one-stop mobile shopping application.</p>
+<ul>
+<li>Pay for airtime, data, bill payments, gift vouchers and lots more</li>
+<li>Book event/bus/movie tickets</li>
+<li>Shop for electronics, clothes, and groceries – you name it from retailers you know and trust</li>
+</ul>
+<p>
+In this notebook, I took a deep dive into the reviews to uncover what their customers think about the application, what they like/dislike about the application and uncover some patterns.
+</p>
+</div>
+<div id="source-of-the-data" class="section level2">
+<h2>2. Source of the Data</h2>
+<p>
+The Dataset is freely available on <a href="https://play.google.com/store/apps/details?id=intelworld.business.client&amp;showAllReviews=true">Google Play Store</a> and was scrapped with <a href="https://pypi.org/project/beautifulsoup4/">Beautiful Soup</a>, a python library for scrapping websites and Loaded into R for further Text Analysis
+</p>
+<p>. The script is not included here because this blog is focussed on R but you can achieve the same with <a href="https://rvest.tidyverse.org/">Rvest</a></p>
+</div>
+<div id="load-the-libraries" class="section level2">
+<h2>3. Load the Libraries</h2>
+<p>Some of the Packages used in the Analysis</p>
+<pre class="r"><code>library(tidyverse) 
+library(Amelia) ## missingness map
+library(rebus)  ## regular expressions
+library(bbplot) 
+library(tidytext)  ## text mining
+library(tidymodels) ## modeling
+library(lubridate) ## working with dates and time
+library(patchwork) ## patching multiple graphs
+library(ggthemes) 
+library(knitr)
+library(emo)  ## for emojis</code></pre>
+</div>
+<div id="read-in-the-dataset" class="section level2">
+<h2>3. Read in the Dataset</h2>
+<p>Let’s read the Dataset into R. Some of the Columns like names, user images will be left out for obvious privacy reasons and also wont be necessary in this analysis, but you can always find them on <a href="https://play.google.com/store/apps/details?id=com.airtel.africa.selfcare&amp;showAllReviews=true">Google Play Store</a> 🔏</p>
+<pre class="r"><code>reviews &lt;- readr::read_csv(file.choose())  %&gt;% 
+    select(-c(reviewId, userName, userImage, appId))
+
+reviews_copy &lt;- reviews</code></pre>
+</div>
+<div id="quick-glimpse-of-the-dataset" class="section level2">
+<h2>4. Quick Glimpse of the Dataset</h2>
+<pre class="r"><code>glimpse(reviews_copy)</code></pre>
+<pre><code>## Rows: 628
+## Columns: 8
+## $ content              &lt;chr&gt; &quot;Existing users: the doesn&#39;t offer an option t...
+## $ score                &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1...
+## $ thumbsUpCount        &lt;dbl&gt; 1, 0, 5, 14, 11, 2, 9, 6, 8, 8, 36, 11, 3, 12,...
+## $ reviewCreatedVersion &lt;chr&gt; &quot;3.4.1&quot;, &quot;3.4.1&quot;, &quot;3.4.1&quot;, &quot;3.3.8&quot;, &quot;3.3.8&quot;, &quot;...
+## $ at                   &lt;dttm&gt; 2020-06-26 08:14:26, 2020-06-09 11:55:43, 202...
+## $ replyContent         &lt;chr&gt; NA, &quot;Sorry to hear that! Could you call 0758 1...
+## $ repliedAt            &lt;dttm&gt; NA, 2020-06-18 11:47:43, 2020-06-18 11:53:06,...
+## $ sortOrder            &lt;chr&gt; &quot;most_relevant&quot;, &quot;most_relevant&quot;, &quot;most_releva...</code></pre>
+</div>
+<div id="missingness-map" class="section level1">
+<h1>5. Missingness Map</h1>
+<p>Some of the Columns are missing some observations for obvious reasons e.g The company doesn’t reply to every single review and thus the column will miss some data.
+Xente Clearly replies to a big chunk of its customers on Google play store</p>
+<pre class="r"><code>missmap(reviews_copy, col = c(&quot;Black&quot;, &quot;Yellow&quot;))</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<div id="some-basic-cleanup-and-processing" class="section level2">
+<h2>6. Some Basic Cleanup and Processing</h2>
+<p>Let’s extract the year, months and major version numbers in into separate columns, will be helpful for further analysis down the road.</p>
+<pre class="r"><code>## This will come in handy when am modelling
+pattern &lt;- DGT %R% optional(DGT)
+
+reviews_processed &lt;- reviews_copy %&gt;% 
+        # na.omit(reviewCreatedVersion) %&gt;% 
+        mutate(version_extracted = str_extract(reviewCreatedVersion, pattern = pattern)) %&gt;%
+        mutate(version_nmbr = as.numeric(version_extracted)) %&gt;% 
+        mutate(year = year(at),
+               month = month(at, label = TRUE), 
+               week_day = wday(at, label = TRUE))</code></pre>
+</div>
+<div id="what-are-the-most-common-used-words-in-the-reviews" class="section level2">
+<h2>7. What are the Most Common Used Words in the Reviews?</h2>
+<p>Top 30 most common words in the reviews</p>
+<p><em>Stop Words</em> and also Words like “App” and “Xente” are filtered out as they don’t bring much value to this analysis and way too common ✂️</p>
+<pre class="r"><code>reviews_processed %&gt;% 
+  unnest_tokens(word, content) %&gt;% 
+  anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+  filter(!word %in% c(&quot;app&quot;, &quot;xente&quot;)) %&gt;%
+  count(word, sort = TRUE) %&gt;% 
+  head(30) %&gt;% 
+  mutate(word = fct_reorder(word, n)) %&gt;% 
+  ggplot(aes(word, n)) +
+  geom_col() +
+  coord_flip() +
+  labs(x=&quot;&quot;, y=&quot;Count&quot;)</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="what-are-the-most-common-positive-and-negative-words" class="section level2">
+<h2>8. What are the Most Common Positive and Negative Words?</h2>
+<p>Using the <strong>Bing Lexicons</strong>, you get scores for Positive/Negative Words, these are the Top 20 most common -ve and +ve Words</p>
+<pre class="r"><code>reviews_processed %&gt;% 
+  unnest_tokens(word, content) %&gt;% 
+  inner_join(get_sentiments(&quot;bing&quot;)) %&gt;% 
+  anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+  select(word, sentiment) %&gt;% 
+  count(word, sentiment, sort = TRUE) %&gt;% 
+  ungroup() %&gt;% 
+  group_by(sentiment)  %&gt;% 
+  top_n(20) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(word = fct_reorder(word, n)) %&gt;% 
+  ggplot(aes(word, n, fill = sentiment)) +
+  geom_col(show.legend = FALSE) +
+  facet_wrap(~sentiment, scales = &quot;free&quot;) + 
+  coord_flip() +
+  labs(y = &quot;Contribution to Sentiment&quot;, x=&quot;&quot;)</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div id="it-is-important-to-see-which-words-contribute-to-your-sentiment-scores." class="section level3">
+<h3>8.1 It is important to see which words contribute to your sentiment scores.</h3>
+<p>What exactly contribute most the different sentiment like anger, disgust, fear etc</p>
+<pre class="r"><code>reviews_processed %&gt;%
+    unnest_tokens(word, content) %&gt;% 
+    anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+    inner_join(get_sentiments(&quot;nrc&quot;)) %&gt;% 
+    # Count by word and sentiment
+    count(word, sentiment) %&gt;% 
+    filter(sentiment %in% c(&quot;anger&quot;, &quot;disgust&quot;, &quot;sadness&quot;, &quot;surprise&quot;)) %&gt;%
+    # Group by sentiment
+    group_by(sentiment) %&gt;%
+    # Take the top 10 words for each sentiment
+    top_n(10) %&gt;%
+    ungroup() %&gt;%
+    mutate(word = reorder(word, n)) %&gt;%
+    # Set up the plot with aes()
+    ggplot(aes(word, n, fill=sentiment)) +
+    geom_col(show.legend = FALSE) +
+    facet_wrap(~ sentiment, scales = &quot;free&quot;) +
+    coord_flip() +
+    theme_fivethirtyeight()</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-8-1.png" width="672" style="display: block; margin: auto;" />
+Invalid and error are biggest drivers of the <em>sadness</em> Sentiment.</p>
+</div>
+<div id="sentiment-changes-with-time" class="section level3">
+<h3>8.2 Sentiment changes with time</h3>
+<p>How have the different sentiments faired over the years, Let’s look at Positive, Negative, Trust and Anger</p>
+<pre class="r"><code>sentiment_by_time &lt;- reviews_processed %&gt;%
+    unnest_tokens(word, content) %&gt;% 
+    anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+    # Define a new column using floor_date()
+    mutate(date = floor_date(at, unit = &quot;3 months&quot;)) %&gt;%
+    # Group by date
+    group_by(date) %&gt;%
+    mutate(total_words = n()) %&gt;%
+    ungroup() %&gt;%
+    # Implement sentiment analysis using the NRC lexicon
+    inner_join(get_sentiments(&quot;nrc&quot;), by=&quot;word&quot;)
+
+
+sentiment_by_time %&gt;%
+    # Filter for positive and negative words
+    filter(sentiment %in% c(&quot;positive&quot;, &quot;negative&quot;, &quot;trust&quot;, &quot;anger&quot;)) %&gt;%
+    # Count by date, sentiment, and total_words
+    count(date, sentiment, total_words) %&gt;%
+    ungroup() %&gt;%
+    mutate(percent = n / total_words) %&gt;%
+    # Set up the plot with aes()
+    ggplot(aes(date, percent, color = sentiment))+
+    geom_line(size = 1.5) +
+    geom_smooth(method = &quot;lm&quot;, se = FALSE, lty = 2) +
+    expand_limits(y = 0) +
+    theme_fivethirtyeight()</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-9-1.png" width="672" style="display: block; margin: auto;" />
+<strong>Trust</strong> is dipping according to this graph</p>
+<!-- ### 8.3 How have words been used over time  -->
+<!-- ```{r fig.align='center'} -->
+<!-- wrds <- c("otp", "data", "money", "free", "1gb", "bad") -->
+<!-- reviews_processed %>% -->
+<!--     unnest_tokens(word, content) %>%  -->
+<!--     anti_join(stop_words, by="word") %>%  -->
+<!--     mutate(date = floor_date(at, "3 month")) %>% -->
+<!--     filter(word %in% wrds ) %>% -->
+<!--     count(date, word) %>% -->
+<!--     ungroup() %>% -->
+<!--     ggplot(aes(date, n, color = word)) + -->
+<!--     # Make facets by word -->
+<!--     facet_wrap(~ word) + -->
+<!--     geom_line(size = 1.5, show.legend = FALSE) + -->
+<!--     geom_smooth(method = "lm", se = FALSE, lty = 2) + -->
+<!--     expand_limits(y = 0) + -->
+<!--     # theme(legend.position = "none") + -->
+<!--     theme_fivethirtyeight() -->
+<!-- ``` -->
+<!-- Words picked at Random from the most common words, Looks like *1gb* and *Free* peaked at in the Same Month. Could have been a promotion or somthing close to that. -->
+</div>
+<div id="what-is-the-average-rating-for-a-word" class="section level3">
+<h3>8.3 What is the Average Rating for a Word</h3>
+<p>These are words that appeared more than x10</p>
+<pre class="r"><code>reviews_processed %&gt;%
+  unnest_tokens(word, content) %&gt;% 
+  anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+  group_by(word) %&gt;% 
+  summarize(avg_rating = mean(score, na.rm = TRUE),
+            n = n()) %&gt;%
+  filter(n &gt; 10) %&gt;% 
+  arrange(avg_rating)</code></pre>
+<pre><code>## # A tibble: 35 x 3
+##    word    avg_rating     n
+##    &lt;chr&gt;        &lt;dbl&gt; &lt;int&gt;
+##  1 slow          1.17    12
+##  2 fake          1.38    16
+##  3 invalid       1.41    34
+##  4 enter         1.44    18
+##  5 telling       1.67    12
+##  6 phone         1.8     30
+##  7 error         1.9     20
+##  8 support       2.14    14
+##  9 account       2.15    26
+## 10 xente         2.2     40
+## # ... with 25 more rows</code></pre>
+<pre class="r"><code>reviews_processed %&gt;%
+  unnest_tokens(word, content) %&gt;% 
+  anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+  group_by(word) %&gt;% 
+  summarize(avg_rating = mean(score, na.rm = TRUE),
+            n = n()) %&gt;%
+  filter(n &gt; 10) %&gt;% 
+  arrange(desc(avg_rating))</code></pre>
+<pre><code>## # A tibble: 35 x 3
+##    word       avg_rating     n
+##    &lt;chr&gt;           &lt;dbl&gt; &lt;int&gt;
+##  1 love             5       24
+##  2 awesome          4.88    16
+##  3 easy             4.78    18
+##  4 card             4.67    12
+##  5 cool             4.5     12
+##  6 nice             4.15    26
+##  7 buy              4.08    24
+##  8 service          3.89    18
+##  9 experience       3.86    14
+## 10 pay              3.62    16
+## # ... with 25 more rows</code></pre>
+</div>
+</div>
+</div>
+<div id="part-2" class="section level1">
+<h1>PART 2</h1>
+<p>So far we’ve considered words as individual units, and considered their relationships to sentiments. However, many interesting text analyses are based on the relationships between words, e.g examining which words tend to follow others immediately</p>
+<div id="visualizing-a-network-of-bigrams" class="section level2">
+<h2>9 Visualizing a network of bigrams</h2>
+<p>Lets visualize all of the relationships among words simultaneously, rather than just the top few at a time.</p>
+<pre class="r"><code>library(igraph)
+library(ggraph)
+library(widyr)
+
+set.seed(12345)
+
+bigrams_ratings &lt;- reviews_processed %&gt;%
+  unnest_tokens(bigrams, content, token = &quot;ngrams&quot;, n = 2) %&gt;% 
+  select(bigrams, everything())
+  # sample_n(10) %&gt;% 
+  # pull(bigrams)
+
+bigrams_ratings_separated &lt;- bigrams_ratings %&gt;% 
+  separate(bigrams, c(&quot;word1&quot;, &quot;word2&quot;, sep = &quot; &quot;)) %&gt;% 
+  filter(!word1 %in% stop_words$word) %&gt;%
+  filter(!word2 %in% stop_words$word) %&gt;% 
+  count(word1, word2, sort = TRUE)
+
+bigram_graph &lt;- bigrams_ratings_separated %&gt;% 
+  filter(n &gt; 2) %&gt;% 
+  graph_from_data_frame()
+
+
+a &lt;- grid::arrow(type = &quot;closed&quot;, length = unit(.15, &quot;inches&quot;))
+
+ggraph(bigram_graph, layout = &quot;fr&quot;) +
+  geom_edge_link(aes(edge_alpha = n), show.legend = FALSE,
+                 arrow = a, end_cap = circle(.07, &#39;inches&#39;)) +
+  geom_node_point(color = &quot;lightblue&quot;, size = 5) +
+  geom_node_text(aes(label = name), vjust = 1, hjust = 1) +
+  theme_void()</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-11-1.png" width="672" style="display: block; margin: auto;" />
+This is a small dataset and there are a few pairs and triplets “Mobile Money” with some centers of nodes like <em>app</em> and <em>airtime</em></p>
+</div>
+<div id="words-preceded-by-not-no-never-without" class="section level2">
+<h2>9.1 Words preceded by Not, No, Never, Without</h2>
+<p>By performing sentiment analysis on the bigram data, we can examine how often sentiment-associated words are preceded by “not” or other negating words like “no”, “Never” and “Without”</p>
+<pre class="r"><code>negation_words &lt;- c(&quot;not&quot;, &quot;no&quot;, &quot;never&quot;, &quot;without&quot;)
+AFINN &lt;- get_sentiments(&quot;afinn&quot;)
+bigrams_ratings %&gt;%
+  separate(bigrams, into = c(&quot;word1&quot;, &quot;word2&quot;), sep = &quot; &quot;) %&gt;% 
+  filter(word1 %in% negation_words)  %&gt;%   
+  inner_join(AFINN, by = c(word2 = &quot;word&quot;)) %&gt;%
+  count(word1, word2, value, sort = TRUE) %&gt;% 
+  mutate(contribution = n * value) %&gt;%
+  arrange(desc(abs(contribution))) %&gt;%
+  head(30) %&gt;% 
+  mutate(word2 = reorder(word2, contribution)) %&gt;%
+  ggplot(aes(word2, n * value, fill = n * value &gt; 0)) +
+  geom_col(show.legend = FALSE) +
+  xlab(&quot;Words preceded by \&quot;not\&quot;&quot;) +
+  ylab(&quot;Sentiment value * number of occurrences&quot;) +
+  coord_flip() +
+  labs(title = &quot;Words Preceeded by NOT...&quot;)</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-12-1.png" width="672" style="display: block; margin: auto;" /></p>
+<pre class="r"><code>  # facet_wrap(~word1, ncol = 2)</code></pre>
+</div>
+<div id="word-cloud" class="section level2">
+<h2>9.2 Word Cloud</h2>
+<p>Text analysis is never complete without a word cloud. 😄</p>
+<pre class="r"><code>library(wordcloud)
+
+reviews_processed %&gt;%
+  unnest_tokens(word, content) %&gt;% 
+  anti_join(stop_words, by=&quot;word&quot;) %&gt;% 
+  count(word) %&gt;%
+  with(wordcloud(word, n, max.words = 100))</code></pre>
+<p><img src="/post/2020-07-13-text-analysis-of-xente-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<div id="future-work" class="section level3">
+<h3>Future Work</h3>
+<ol style="list-style-type: decimal">
+<li><p>A Sentiment Model to Predict a Rating Based the content in the Review.</p></li>
+<li><p>Work on an Interactive Web Application to bring the Analysis to Life for any Application on Google Play Store</p></li>
+<li><p>An R Package for easier and further Analysis.</p></li>
+</ol>
+</div>
+<div id="helpul-links" class="section level3">
+<h3>Helpul Links</h3>
+<ul>
+<li>(R for Data Science)[<a href="https://r4ds.had.co.nz/" class="uri">https://r4ds.had.co.nz/</a>]</li>
+<li>(Text Mining in R)[<a href="https://www.tidytextmining.com/" class="uri">https://www.tidytextmining.com/</a>]</li>
+<li>(Sentiment Anlysis in R from DataCamp)[<a href="https://campus.datacamp.com/" class="uri">https://campus.datacamp.com/</a>]</li>
+</ul>
+</div>
+</div>
+</div>
