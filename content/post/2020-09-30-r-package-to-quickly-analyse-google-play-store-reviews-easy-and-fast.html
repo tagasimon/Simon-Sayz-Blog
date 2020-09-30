@@ -1,0 +1,49 @@
+---
+title: R package to quickly analyse Google Play Store Reviews easy and fast
+author: Simon Sayz
+date: '2020-09-30'
+slug: r-package-to-quickly-analyse-google-play-store-reviews-easy-and-fast
+categories:
+  - Analysis
+  - text mining
+tags:
+  - R
+  - analysis
+cover: ''
+keywords:
+  - ''
+  - ''
+summary: ''
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="background-of-appstorr" class="section level2">
+<h2>Background 🙈 of appstorr</h2>
+<p>I did some text analysis on <a href="https://simonsayz.xyz/post/text-analysis-of-safeboda-app-google-play-store-reviews-in-r/">SafeBoda Google Play Store Reviews</a> and someone challenged me to work on a package around it for any company with an app to look into their reviews faster and easier, so i did!!😃</p>
+<div id="installation" class="section level3">
+<h3>Installation 💽</h3>
+<p>The latest stable version (if any) could be found on <a href="https://github.com/tagasimon/appstorr">Appstorr</a>, and installed using devtools package.</p>
+<pre><code>if (!require(devtools)) install.packages(&quot;devtools&quot;)
+devtools::install_github(&quot;tagasimon/appstorr&quot;)</code></pre>
+</div>
+<div id="usage-️" class="section level3">
+<h3>Usage ☄️</h3>
+<p>The package is extremely easy to use. Almost everything could be done in one line of code.</p>
+<pre><code>df &lt;- appstorr::df_safeboda
+appstorr::quick_report(data = df, 
+                       report_title = &quot;Awesome SafeBoda Text Analysis Report&quot;)</code></pre>
+<p><img src="https://simonsayz.xyz/post/2020-07-23-text-analysis-of-safeboda-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-11-1.png" title="Bigrams" width="533" /></p>
+</div>
+<div id="future-work" class="section level3">
+<h3>Future Work🤠</h3>
+<ul>
+<li>A Sentiment Model to Predict a Rating Based the content in the Review.</li>
+</ul>
+<!-- -->
+<ul>
+<li>Work on an Interactive Web Application to bring the Analysis to Life for any Application on Google Play Store</li>
+</ul>
+</div>
+</div>

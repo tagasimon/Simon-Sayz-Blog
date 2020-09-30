@@ -6,10 +6,21 @@
     <description>Recent content in R on Simon Sayz</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 30 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>R package to quickly analyse Google Play Store Reviews easy and fast</title>
+      <link>/post/r-package-to-quickly-analyse-google-play-store-reviews-easy-and-fast/</link>
+      <pubDate>Wed, 30 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/post/r-package-to-quickly-analyse-google-play-store-reviews-easy-and-fast/</guid>
+      <description>Background 🙈 of appstorrI did some text analysis on SafeBoda Google Play Store Reviews and someone challenged me to work on a package around it for any company with an app to look into their reviews faster and easier, so i did!!😃
+Installation 💽The latest stable version (if any) could be found on Appstorr, and installed using devtools package.
+if (!require(devtools)) install.packages(&amp;quot;devtools&amp;quot;)devtools::install_github(&amp;quot;tagasimon/appstorr&amp;quot;)Usage ☄️The package is extremely easy to use.</description>
+    </item>
     
     <item>
       <title>Text Analysis of SafeBoda App Google Play Store Reviews in R</title>

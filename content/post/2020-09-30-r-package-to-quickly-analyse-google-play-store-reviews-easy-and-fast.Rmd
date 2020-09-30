@@ -1,0 +1,50 @@
+---
+title: R package to quickly analyse Google Play Store Reviews easy and fast
+author: Simon Sayz
+date: '2020-09-30'
+slug: r-package-to-quickly-analyse-google-play-store-reviews-easy-and-fast
+categories:
+  - Analysis
+  - text mining
+tags:
+  - R
+  - analysis
+cover: ''
+keywords:
+  - ''
+  - ''
+summary: ''
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+```
+
+## Background 🙈 of appstorr
+
+I did some text analysis on [SafeBoda Google Play Store Reviews](https://simonsayz.xyz/post/text-analysis-of-safeboda-app-google-play-store-reviews-in-r/) and someone challenged me to work on a package around it for any company with an app to look into their reviews faster and easier, so i did!!😃
+
+### Installation 💽
+
+The latest stable version (if any) could be found on [Appstorr](https://github.com/tagasimon/appstorr), and installed using devtools package.
+
+    if (!require(devtools)) install.packages("devtools")
+    devtools::install_github("tagasimon/appstorr")
+
+### Usage ☄️
+
+The package is extremely easy to use. Almost everything could be done in one line of code.
+
+    df <- appstorr::df_safeboda
+    appstorr::quick_report(data = df, 
+                           report_title = "Awesome SafeBoda Text Analysis Report")
+
+![](https://simonsayz.xyz/post/2020-07-23-text-analysis-of-safeboda-app-google-play-store-reviews-in-r_files/figure-html/unnamed-chunk-11-1.png "Bigrams"){width="533"}
+
+### Future Work🤠
+
+-   A Sentiment Model to Predict a Rating Based the content in the Review.
+
+<!-- -->
+
+-   Work on an Interactive Web Application to bring the Analysis to Life for any Application on Google Play Store
