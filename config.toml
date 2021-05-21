@@ -10,7 +10,7 @@ disqusShortname = "disqus_ZaSIgvoejX"
 [params]
     author = "Simon Sayz"
     status = "<enjoy> My Blog </enjoy>"
-    description = "I am an Aspiring Data Scientist: Comfortable in R, Python, Tableau, Shiny, SQL"
+    description = "I am an Aspiring Data Scientist & Mobile Dev: Comfortable in R, Python, Tableau, Shiny, SQL, Power BI & Flutter"
     twitter = "simonsayzdgtl"
 	linkedin = "simon-sayz"
 	github = "tagasimon"
@@ -25,7 +25,7 @@ disqusShortname = "disqus_ZaSIgvoejX"
     favicon = "favicon.ico"
 
 [params.logo]
-    url = "logo.png"
+    url = "https://avatars.githubusercontent.com/u/7413001?v=4"
     width = 50
     height = 50
     alt = "Logo"
