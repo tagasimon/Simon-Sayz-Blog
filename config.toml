@@ -17,7 +17,7 @@ disqusShortname = "disqus_ZaSIgvoejX"
 	shiny = "http://67.207.81.13/shiny/"
 	tabl = "https://public.tableau.com/profile/kazooba.simon"
     email = "smkabz@gmail.com"
-    avatar = ""
+    avatar = "https://avatars.githubusercontent.com/u/7413001?v=4"
     url = "https://simonsayz.xyz/"
     keywords = "blog, R, tidyverse, Data Science"
 
@@ -25,7 +25,7 @@ disqusShortname = "disqus_ZaSIgvoejX"
     favicon = "favicon.ico"
 
 [params.logo]
-    url = "https://avatars.githubusercontent.com/u/7413001?v=4"
+    url = "https://github.com/tagasimon"
     width = 50
     height = 50
     alt = "Logo"
